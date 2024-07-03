@@ -1,5 +1,6 @@
 package list
 
+
 type Node struct {
 	Value any
 	next *Node
@@ -19,12 +20,7 @@ type List interface {
 	Remove(n *Node) bool
 	PopFront() *Node
 	PopBack() *Node
+	Len() int
+	Head() *Node
 	Clear()
-
 }
-
-
-
-// type Dll interface {
-// 	Add()
-// }

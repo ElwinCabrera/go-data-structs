@@ -1,22 +1,19 @@
 package list
 
-
 import (
 	"fmt"
 )
 
-
 type DoublyLinkedList LinkedList
 
-func InitDoublyLinkedList() *DoublyLinkedList{
+func InitDoublyLinkedList() *DoublyLinkedList {
 	return &DoublyLinkedList{nil, 0}
 }
 
-
-func (dll *DoublyLinkedList) InsertEnd(v any) *Node{
+func (dll *DoublyLinkedList) InsertEnd(v any) *Node {
 	head := dll.head
 	new_node := &Node{v, nil, nil}
-	if head == nil{
+	if head == nil {
 		dll.head = new_node
 	} else {
 		for head.next != nil {
@@ -29,86 +26,114 @@ func (dll *DoublyLinkedList) InsertEnd(v any) *Node{
 	return new_node
 }
 
-func (dll *DoublyLinkedList) InsertFront(v any) *Node{
+func (dll *DoublyLinkedList) InsertFront(v any) *Node {
 	new_node := &Node{v, nil, nil}
-	new_node.next = dll.head
-	dll.head.prev = new_node
-	dll.head = new_node
-	dll.len++
-	return new_node
-}
-
-func (dll *DoublyLinkedList) InsertBefore(v any, n *Node) *Node{
-	new_node := &Node{v, nil, nil}
-	if dll.head == nil || n == nil{
+	if dll.head == nil {
 		dll.head = new_node
-		return new_node
-	}
-	new_node.prev = n.prev
-	if n.prev != nil {
-		n.prev.next = new_node
-	}
-	n.prev = new_node
-	new_node.next = n
-	dll.len++
-	return new_node
-}
-
-func (dll *DoublyLinkedList) InsertAfter(v any, n *Node) *Node{
-	new_node := &Node{v, nil, nil}
-	if dll.head == nil || n == nil{
+	} else {
+		new_node.next = dll.head
+		dll.head.prev = new_node
 		dll.head = new_node
-		return new_node
 	}
-	new_node.prev = n
-	new_node.next = n.next
-	if n.next != nil{
-		n.next.prev = new_node
-	}
-	n.next = new_node
 	dll.len++
 	return new_node
 }
 
+func (dll *DoublyLinkedList) InsertBefore(v any, n *Node) *Node {
 
+	new_node := &Node{v, nil, nil}
+	if dll.head == nil || n == nil {
+		if n == nil && dll.head != nil {
+			return nil
+		}
+		dll.head = new_node
+	} else {
+		if n.prev != nil {
+			new_node.prev = n.prev
+			n.prev.next = new_node
+		}
+		n.prev = new_node
+		new_node.next = n
+		if n == dll.head {
+			dll.head = new_node
+		}
+	}
+	dll.len++
+	return new_node
+}
 
+func (dll *DoublyLinkedList) InsertAfter(v any, n *Node) *Node {
+
+	new_node := &Node{v, nil, nil}
+	if dll.head == nil || n == nil {
+		if n == nil && dll.head != nil {
+			return nil
+		}
+		dll.head = new_node
+	} else {
+		new_node.prev = n
+
+		if n.next != nil {
+			new_node.next = n.next
+			n.next.prev = new_node
+		}
+		n.next = new_node
+	}
+
+	dll.len++
+	return new_node
+}
 
 func (dll *DoublyLinkedList) PopFront() *Node {
 	popped_node := dll.head
-	if dll.head == nil {
-		return nil
+	if dll.head != nil {
+		dll.head = dll.head.next
+		if dll.head != nil {
+			dll.head.prev = nil
+		}
+		popped_node.next = nil
+		popped_node.prev = nil
 	}
-	if dll.head.next == nil {
-		dll.head = nil
-		return popped_node
-	}
-	dll.head = dll.head.next
-	dll.head.prev = nil
+
 	dll.len--
 	return popped_node
 }
 
 func (dll *DoublyLinkedList) PopBack() *Node {
-	if dll.head == nil || dll.head.next == nil{
+	popped_node := dll.head
+	if dll.head != nil {
+
+		for popped_node.next != nil {
+			popped_node = popped_node.next
+		}
+		if popped_node.prev != nil {
+			popped_node.prev.next = nil
+		}
+		popped_node.prev = nil
+
+		if popped_node == dll.head {
+			dll.head = nil
+		}
+
+	} else {
 		dll.head = nil
-		return nil
 	}
-	curr := dll.head
-	for curr.next.next != nil {
-		curr = curr.next
-	}
-	popped_node := curr.next
-	popped_node.prev = nil
-	curr.next = nil
+
 	dll.len--
 	return popped_node
 
 }
 
-
-
-func (dll *DoublyLinkedList) Remove(n *Node) bool{
+func (dll *DoublyLinkedList) Remove(n *Node) bool {
+	if dll.head == nil {
+		return false // this is more of an error than anything else
+	}
 	if n == nil {
+		return true
+	}
+
+	if n == dll.head {
+		dll.PopFront()
 		return true
 	}
 
@@ -120,8 +145,7 @@ func (dll *DoublyLinkedList) Remove(n *Node) bool{
 	if next != nil {
 		next.prev = prev
 	}
-	n.next = nil
-	n.prev = nil
+
 	n = nil
 	dll.len--
 	return true
@@ -139,12 +163,19 @@ func (dll *DoublyLinkedList) Clear() {
 	dll.len = 0
 }
 
+func (dll *DoublyLinkedList) Len() int {
+	return dll.len
+}
 
-func (dll *DoublyLinkedList) String() string{
+func (dll *DoublyLinkedList) Head() *Node {
+	return dll.head
+}
+
+func (dll *DoublyLinkedList) String() string {
 	head := dll.head
-	
+
 	var arr []any
-	
+
 	//result_str := "["
 	result_str := ""
 	i := 0
