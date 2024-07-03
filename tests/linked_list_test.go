@@ -1,4 +1,4 @@
-package list
+package tests
 
 import (
 	"slices"

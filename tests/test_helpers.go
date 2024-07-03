@@ -1,4 +1,4 @@
-package list
+package tests
 
 import (
 	"fmt"
@@ -7,8 +7,7 @@ import (
 	"github.com/ElwinCabrera/go-containers/list"
 )
 
-func insertListRandomData(l list.List, size int) (list.List, []int) {
-
+func getArrayRandomValues(size int) []int {
 	seen_map := make(map[int]bool)
 	var values []int
 	for i := 0; i < size; i++ {
@@ -20,9 +19,16 @@ func insertListRandomData(l list.List, size int) (list.List, []int) {
 		}
 		seen_map[ran_num] = true
 		values = append(values, ran_num)
-		l.InsertEnd(ran_num)
 	}
 
+	return values
+}
+
+func insertListRandomData(l list.List, size int) (list.List, []int) {
+	values := getArrayRandomValues(size)
+	for _, v := range values {
+		l.InsertEnd(v)
+	}
 	return l, values
 }
 
