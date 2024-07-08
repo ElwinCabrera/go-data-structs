@@ -28,7 +28,7 @@ func binaryTreeInsert[T TreeNodeValue](current *TreeNode[T], value T) *TreeNode[
 
 }
 
-func treeRemoveHelper[T any](current *TreeNode[T], remove *TreeNode[T]) {
+func treeRemoveNodeHelper[T any](current *TreeNode[T], remove *TreeNode[T]) {
 	if current == nil || remove == nil {
 		return
 	}
@@ -43,8 +43,8 @@ func treeRemoveHelper[T any](current *TreeNode[T], remove *TreeNode[T]) {
 		current.right = removeRight
 		remove = nil
 	} else {
-		treeRemoveHelper(current.left, remove)
-		treeRemoveHelper(current.right, remove)
+		treeRemoveNodeHelper(current.left, remove)
+		treeRemoveNodeHelper(current.right, remove)
 	}
 }
 
@@ -60,6 +60,17 @@ func treeFindHelper[T TreeNodeValue](current *TreeNode[T], value T) *TreeNode[T]
 		treeFindHelper(current.right, value)
 	}
 	return foundNode
+}
+
+func treeFindAllHelper[T TreeNodeValue](current *TreeNode[T], value T, foundValues *[]*TreeNode[T]) {
+	if current == nil {
+		return
+	}
+	if value == current.Value {
+		*foundValues = append(*foundValues, current)
+	}
+	treeFindAllHelper(current.left, value, foundValues)
+	treeFindAllHelper(current.right, value, foundValues)
 }
 
 func treeContainsHelper[T TreeNodeValue](current *TreeNode[T], value T) bool {
@@ -104,4 +115,31 @@ func treeMaxHelper[T TreeNodeValue](current *TreeNode[T], currMax *T) {
 
 func treeClearHelper[T any](current *TreeNode[T]) {
 
+}
+
+func treePreOrderValueHelper[T TreeNodeValue](current *TreeNode[T], nodes *[]*TreeNode[T]) {
+	if current == nil {
+		return
+	}
+	*nodes = append(*nodes, current)
+	treePreOrderValueHelper(current.left, nodes)
+	treePreOrderValueHelper(current.right, nodes)
+}
+
+func treeInOrderValueHelper[T TreeNodeValue](current *TreeNode[T], nodes *[]*TreeNode[T]) {
+	if current == nil {
+		return
+	}
+	treeInOrderValueHelper(current.left, nodes)
+	*nodes = append(*nodes, current)
+	treeInOrderValueHelper(current.right, nodes)
+}
+
+func treePostOrderValueHelper[T TreeNodeValue](current *TreeNode[T], nodes *[]*TreeNode[T]) {
+	if current == nil {
+		return
+	}
+	treePostOrderValueHelper(current.left, nodes)
+	treePostOrderValueHelper(current.right, nodes)
+	*nodes = append(*nodes, current)
 }
