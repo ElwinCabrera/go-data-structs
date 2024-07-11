@@ -2,30 +2,12 @@ package tests
 
 import (
 	"fmt"
-	"math/rand"
-
 	"github.com/ElwinCabrera/go-containers/list"
+	"math/rand"
 )
 
-func getArrayRandomValues(size int) []int {
-	seen_map := make(map[int]bool)
-	var values []int
-	for i := 0; i < size; i++ {
-		ran_num := rand.Intn(size)
-		_, seen := seen_map[ran_num]
-		for seen {
-			ran_num = rand.Intn(size)
-			_, seen = seen_map[ran_num]
-		}
-		seen_map[ran_num] = true
-		values = append(values, ran_num)
-	}
-
-	return values
-}
-
 func insertListRandomData(l list.List, size int) (list.List, []int) {
-	values := getArrayRandomValues(size)
+	values := getArrayOfRandomUniqueValues(size)
 	for _, v := range values {
 		l.InsertEnd(v)
 	}

@@ -7,7 +7,7 @@ import (
 
 func testStackPush(t *testing.T, size int) (*stack_queue.Stack, []int) {
 	stack := stack_queue.InitStack()
-	values := getArrayRandomValues(size)
+	values := getArrayOfRandomUniqueValues(size)
 	for _, v := range values {
 		stack.Push(v)
 		if stack.Peek() != v {
@@ -23,7 +23,7 @@ func testStackPush(t *testing.T, size int) (*stack_queue.Stack, []int) {
 
 func testQueuePush(t *testing.T, size int) (*stack_queue.Queue, []int) {
 	queue := stack_queue.InitQueue()
-	values := getArrayRandomValues(size)
+	values := getArrayOfRandomUniqueValues(size)
 	for _, v := range values {
 		queue.Push(v)
 		if queue.Back() != v {

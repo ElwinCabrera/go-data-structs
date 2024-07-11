@@ -13,10 +13,17 @@ type TreeNode[T any] struct {
 
 type Tree[T any] interface {
 	Insert(value T) *TreeNode[T]
-	Remove(n *TreeNode[T]) bool
+
+	RemoveNode(n *TreeNode[T])
+	RemoveValue(value T)
 	Contains(value T) bool
 	Find(value T) []*TreeNode[T]
-	Values() []T
+	//Values() []T
 	Size() int
 	Clear() bool
+
+	PreOrderValues() []*TreeNode[T]
+	InOrderValues() []*TreeNode[T]
+	PostOrderValues() []*TreeNode[T]
+	Root() *TreeNode[T]
 }
