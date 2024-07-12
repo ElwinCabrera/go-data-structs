@@ -27,3 +27,8 @@ type Tree[T any] interface {
 	PostOrderValues() []*TreeNode[T]
 	Root() *TreeNode[T]
 }
+
+type MinMaxTree[T any] interface {
+	Tree[T]
+	Pop() *TreeNode[T]
+}

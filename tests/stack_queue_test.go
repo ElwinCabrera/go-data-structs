@@ -1,12 +1,12 @@
 package tests
 
 import (
-	"github.com/ElwinCabrera/go-containers/stack-queue"
+	"github.com/ElwinCabrera/go-containers/stack-queue-set"
 	"testing"
 )
 
-func testStackPush(t *testing.T, size int) (*stack_queue.Stack, []int) {
-	stack := stack_queue.InitStack()
+func testStackPush(t *testing.T, size int) (*stack_queue_set.Stack, []int) {
+	stack := stack_queue_set.InitStack()
 	values := getArrayOfRandomUniqueValues(size)
 	for _, v := range values {
 		stack.Push(v)
@@ -21,8 +21,8 @@ func testStackPush(t *testing.T, size int) (*stack_queue.Stack, []int) {
 	return stack, values
 }
 
-func testQueuePush(t *testing.T, size int) (*stack_queue.Queue, []int) {
-	queue := stack_queue.InitQueue()
+func testQueuePush(t *testing.T, size int) (*stack_queue_set.Queue, []int) {
+	queue := stack_queue_set.InitQueue()
 	values := getArrayOfRandomUniqueValues(size)
 	for _, v := range values {
 		queue.Push(v)

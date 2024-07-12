@@ -28,6 +28,29 @@ func binaryTreeInsert[T TreeNodeValue](current *TreeNode[T], value T) *TreeNode[
 
 }
 
+func binaryTreeInsertNode[T TreeNodeValue](current, insertNode *TreeNode[T]) {
+	if current == nil || insertNode == nil {
+		return
+	}
+
+	insertNode.left = nil
+	insertNode.right = nil
+
+	if insertNode.Value <= current.Value {
+		if current.left == nil {
+			current.left = insertNode
+		}
+		binaryTreeInsertNode(current.left, insertNode)
+
+	} else {
+		if current.right == nil {
+			current.right = insertNode
+		}
+		binaryTreeInsertNode(current.right, insertNode)
+	}
+
+}
+
 // removes any node that in within currents sub trees else is current == remove then this will not work
 func removeNodeHelper[T TreeNodeValue](current *TreeNode[T], remove *TreeNode[T]) {
 	if current == nil || remove == nil {

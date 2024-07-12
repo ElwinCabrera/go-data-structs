@@ -1,4 +1,4 @@
-package stack_queue
+package stack_queue_set
 
 import "github.com/ElwinCabrera/go-containers/list"
 
