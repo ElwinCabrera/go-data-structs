@@ -9,7 +9,7 @@ type comarableValues interface {
 	~int | ~float32 | ~float64 | ~string
 }
 
-func getArrayOfRandomUniqueValues(size int) []int {
+func getArrayOfRandomNonNegativeUniqueValues(size int) []int {
 	seen_map := make(map[int]bool)
 	var values []int
 	for i := 0; i < size; i++ {

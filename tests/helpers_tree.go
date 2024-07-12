@@ -54,40 +54,28 @@ func verifyTreeNodeOrder[T trees.TreeNodeValue](t *testing.T, expectedOrder []T,
 	}
 }
 
-//func getHeapExpectedInOrderValuesFromInsertedValues[T trees.TreeNodeValue](insertedValues []T, heapType string) []T {
-//	if insertedValues == nil || len(insertedValues) == 0 {
-//		return insertedValues
-//	}
-//
-//	expectedInOrderValues := sortArrayAsc(insertedValues)
-//
-//	minVal, maxVal := insertedValues[0], insertedValues[0]
-//
-//	for _, value := range insertedValues {
-//		if value < minVal {
-//			minVal = value
-//		}
-//		if value > maxVal {
-//			maxVal = value
-//		}
-//	}
-//
-//	removeIdxForMaxVal := 0
-//	removeIdxForMinVal := 0
-//	for i, value := range expectedInOrderValues {
-//		if value == maxVal {
-//			removeIdxForMaxVal = i
-//		}
-//		if value == minVal {
-//			removeIdxForMinVal = i
-//		}
-//	}
-//
-//	if heapType == "min" {
-//
-//	} else if heapType == "max" {
-//
-//	}
-//
-//	return expectedInOrderValues
-//}
+func findMaxNodeValueInList(nodes []*trees.TreeNode[int]) int {
+	if len(nodes) == 0 {
+		return -1
+	}
+	maxNodeVal := nodes[0].Value
+	for _, node := range nodes {
+		if node.Value > maxNodeVal {
+			maxNodeVal = node.Value
+		}
+	}
+	return maxNodeVal
+}
+
+func findMinNodeValueInList(nodes []*trees.TreeNode[int]) int {
+	if len(nodes) == 0 {
+		return -1
+	}
+	minNodeVal := nodes[0].Value
+	for _, node := range nodes {
+		if node.Value < minNodeVal {
+			minNodeVal = node.Value
+		}
+	}
+	return minNodeVal
+}

@@ -38,7 +38,7 @@ func testInsertAndPreInAndPostOrderValues(t *testing.T, tree trees.Tree[int]) {
 	verifyTreeNodeOrder(t, sortedAsc, &treeOrder3)
 	//
 	tree.Clear()
-	insert_values = getArrayOfRandomUniqueValues(30)
+	insert_values = getArrayOfRandomNonNegativeUniqueValues(30)
 	treeTestInsertHelper(t, tree, &insert_values)
 	treeOrder1 = tree.InOrderValues()
 	verifyTreeNodeOrder(t, sortArrayAsc(insert_values), &treeOrder1)
@@ -101,7 +101,7 @@ func testHeapInsertAndPreInAndPostOrderValues(t *testing.T, tree trees.MinMaxTre
 
 	//
 	tree.Clear()
-	insert_values = getArrayOfRandomUniqueValues(30)
+	insert_values = getArrayOfRandomNonNegativeUniqueValues(30)
 	treeTestInsertHelper(t, tree, &insert_values)
 	treeOrder1 = tree.InOrderValues()
 	verifyTreeNodeOrder(t, sortArrayAsc(insert_values), &treeOrder1)
@@ -110,7 +110,7 @@ func testHeapInsertAndPreInAndPostOrderValues(t *testing.T, tree trees.MinMaxTre
 func testSizeMinMaxAndClear(t *testing.T, tree trees.Tree[int]) {
 	tree.Clear()
 	//create tree and sanity check
-	insert_values := getArrayOfRandomUniqueValues(20)
+	insert_values := getArrayOfRandomNonNegativeUniqueValues(20)
 	treeTestInsertHelper(t, tree, &insert_values)
 	verifyTree(t, tree, insert_values)
 
@@ -136,7 +136,7 @@ func testRemove(t *testing.T, tree trees.Tree[int]) {
 	tree.Clear()
 	//create tree and sanity check
 	//tree := trees.NewBinaryTree[int]()
-	insert_values := getArrayOfRandomUniqueValues(20)
+	insert_values := getArrayOfRandomNonNegativeUniqueValues(20)
 	nodes := treeTestInsertHelper(t, tree, &insert_values)
 	verifyTree(t, tree, insert_values)
 
@@ -152,7 +152,7 @@ func testRemove(t *testing.T, tree trees.Tree[int]) {
 
 	//testing RemoveValue
 	tree.Clear()
-	insert_values = getArrayOfRandomUniqueValues(20)
+	insert_values = getArrayOfRandomNonNegativeUniqueValues(20)
 	nodes = treeTestInsertHelper(t, tree, &insert_values)
 	for _, node := range nodes {
 		tree.RemoveValue(node.Value)
@@ -165,7 +165,7 @@ func testRemove(t *testing.T, tree trees.Tree[int]) {
 
 	//Testing  RemoveValue with a tree that has duplicate values
 	tree.Clear()
-	insert_values = getArrayOfRandomUniqueValues(10)
+	insert_values = getArrayOfRandomNonNegativeUniqueValues(10)
 
 	for _, val := range insert_values {
 		insert_values = append(insert_values, val)
@@ -205,7 +205,7 @@ func testHeapPop(t *testing.T, tree trees.MinMaxTree[int]) {
 
 	tree.Clear()
 
-	insertValues := getArrayOfRandomUniqueValues(10)
+	insertValues := getArrayOfRandomNonNegativeUniqueValues(10)
 	treeTestInsertHelper(t, tree, &insertValues)
 	treeInOrderVals := tree.InOrderValues()
 	verifyTreeNodeOrder(t, sortArrayAsc(insertValues), &treeInOrderVals)
@@ -231,59 +231,56 @@ func testHeapPop(t *testing.T, tree trees.MinMaxTree[int]) {
 	}
 
 	tree.Clear()
-	insertValues = getArrayOfRandomUniqueValues(30)
+	insertValues = getArrayOfRandomNonNegativeUniqueValues(30)
 	treeTestInsertHelper(t, tree, &insertValues)
 	treeInOrderVals = tree.InOrderValues()
 	verifyTreeNodeOrder(t, sortArrayAsc(insertValues), &treeInOrderVals)
 
-	//if tree.GetHeapType() == "min" {
-	//	for i, val := range treeInOrderVals {
-	//		var poppedVal int
-	//		poppedNode := tree.Pop()
-	//
-	//		if poppedNode == nil {
-	//			t.Fatalf("HeapPop expected a non-nil node")
-	//		}
-	//
-	//		poppedVal = poppedNode.Value
-	//
-	//		if poppedVal != val {
-	//			t.Fatalf("HeapPop did not return correct value. got %v, expected %v", poppedNode.Value, val)
-	//		}
-	//
-	//		if i+1 >= len(treeInOrderVals) {
-	//			if tree.Root() != nil {
-	//				t.Fatalf("Heap tree should have popped all values but tree is still not empty. Got a root of %v, expected nil", tree.Root().Value)
-	//			}
-	//		} else {
-	//			if tree.Root().Value != treeInOrderVals[i+1] {
-	//				t.Fatalf("Heap tree new root should be the next maximum value of %v but got %v", treeInOrderVals[i+1], tree.Root().Value)
-	//			}
-	//		}
-	//	}
-	//} else {
-	//	for i := len(treeInOrderVals) - 1; i >= 0; i-- {
-	//		val := treeInOrderVals[i]
-	//		poppedNode := tree.Pop()
-	//		if poppedNode == nil {
-	//			t.Fatalf("HeapPop expected a non-nil node")
-	//		}
-	//
-	//		if poppedNode.Value != val {
-	//			t.Fatalf("HeapPop did not return correct value. got %v, expected %v", poppedNode.Value, val)
-	//		}
-	//
-	//		if i-1 < 0 {
-	//			if tree.Root() != nil {
-	//				t.Fatalf("Heap tree should have popped all values but tree is still not empty. Got a root of %v, expected nil", tree.Root().Value)
-	//			}
-	//		} else {
-	//			if tree.Root().Value != treeInOrderVals[i-1] {
-	//				t.Fatalf("Heap tree new root should be the next maximum value of %v but got %v", treeInOrderVals[i-1], tree.Root().Value)
-	//			}
-	//		}
-	//	}
-	//}
+	if tree.GetHeapType() == "min" {
+		for i, node := range treeInOrderVals {
+
+			poppedNode := tree.Pop()
+			if poppedNode == nil {
+				t.Fatalf("HeapPop expected a non-nil node")
+			}
+
+			if poppedNode.Value != node.Value {
+				t.Fatalf("HeapPop did not return correct value. got %v, expected %v", poppedNode.Value, node.Value)
+			}
+
+			if i+1 >= len(treeInOrderVals) {
+				if tree.Root() != nil {
+					t.Fatalf("Heap tree should have popped all values but tree is still not empty. Got a root of %v, expected nil", tree.Root().Value)
+				}
+			} else {
+				if tree.Root().Value != treeInOrderVals[i+1].Value {
+					t.Fatalf("Heap tree new root should be the next maximum value of %v but got %v", treeInOrderVals[i+1].Value, tree.Root().Value)
+				}
+			}
+		}
+	} else {
+		for i := len(treeInOrderVals) - 1; i >= 0; i-- {
+			node := treeInOrderVals[i]
+			poppedNode := tree.Pop()
+			if poppedNode == nil {
+				t.Fatalf("HeapPop expected a non-nil node")
+			}
+
+			if poppedNode.Value != node.Value {
+				t.Fatalf("HeapPop did not return correct value. got %v, expected %v", poppedNode.Value, node.Value)
+			}
+
+			if i-1 < 0 {
+				if tree.Root() != nil {
+					t.Fatalf("Heap tree should have popped all values but tree is still not empty. Got a root of %v, expected nil", tree.Root().Value)
+				}
+			} else {
+				if tree.Root().Value != treeInOrderVals[i-1].Value {
+					t.Fatalf("Heap tree new root should be the next maximum value of %v but got %v", treeInOrderVals[i-1].Value, tree.Root().Value)
+				}
+			}
+		}
+	}
 
 }
 
@@ -291,7 +288,7 @@ func testContainsFindAndFindFirst(t *testing.T, tree trees.Tree[int]) {
 	tree.Clear()
 	//create tree, insert values, and do small sanity check
 
-	insert_values := getArrayOfRandomUniqueValues(10)
+	insert_values := getArrayOfRandomNonNegativeUniqueValues(10)
 	treeTestInsertHelper(t, tree, &insert_values)
 	verifyTree(t, tree, insert_values)
 
@@ -322,7 +319,7 @@ func testContainsFindAndFindFirst(t *testing.T, tree trees.Tree[int]) {
 
 	//Test Find and FindFirst with a tree having duplicate values
 	tree.Clear()
-	insert_values = getArrayOfRandomUniqueValues(10)
+	insert_values = getArrayOfRandomNonNegativeUniqueValues(10)
 
 	for _, val := range insert_values {
 		insert_values = append(insert_values, val)

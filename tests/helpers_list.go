@@ -7,7 +7,7 @@ import (
 )
 
 func insertListRandomData(l list.List, size int) (list.List, []int) {
-	values := getArrayOfRandomUniqueValues(size)
+	values := getArrayOfRandomNonNegativeUniqueValues(size)
 	for _, v := range values {
 		l.InsertEnd(v)
 	}
