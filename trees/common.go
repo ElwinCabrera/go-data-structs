@@ -13,15 +13,15 @@ type TreeNode[T any] struct {
 
 type Tree[T any] interface {
 	Insert(value T) *TreeNode[T]
-
 	RemoveNode(n *TreeNode[T])
 	RemoveValue(value T)
 	Contains(value T) bool
 	Find(value T) []*TreeNode[T]
-	//Values() []T
+	FindFirst(value T) *TreeNode[T]
 	Size() int
 	Clear() bool
-
+	Min() any
+	Max() any
 	PreOrderValues() []*TreeNode[T]
 	InOrderValues() []*TreeNode[T]
 	PostOrderValues() []*TreeNode[T]
@@ -31,4 +31,5 @@ type Tree[T any] interface {
 type MinMaxTree[T any] interface {
 	Tree[T]
 	Pop() *TreeNode[T]
+	GetHeapType() string
 }

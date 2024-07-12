@@ -5,57 +5,118 @@ import (
 	"testing"
 )
 
-func testInsertAndPreInAndPostOrderValues(t *testing.T) {
-	btree := trees.NewBinaryTree[int]()
-
+func testInsertAndPreInAndPostOrderValues(t *testing.T, tree trees.Tree[int]) {
+	tree.Clear()
 	insert_values := []int{20, 10, 30, 9, 11, 21, 31}
-	treeTestInsertHelper(t, btree, &insert_values)
-	treeOrder1 := btree.PreOrderValues()
-	treeOrder2 := btree.InOrderValues()
-	treeOrder3 := btree.PostOrderValues()
+	treeTestInsertHelper(t, tree, &insert_values)
+	treeOrder1 := tree.PreOrderValues()
+	treeOrder2 := tree.InOrderValues()
+	treeOrder3 := tree.PostOrderValues()
 	verifyTreeNodeOrder(t, []int{20, 10, 9, 11, 30, 21, 31}, &treeOrder1)
 	verifyTreeNodeOrder(t, []int{9, 10, 11, 20, 21, 30, 31}, &treeOrder2)
 	verifyTreeNodeOrder(t, []int{9, 11, 10, 21, 31, 30, 20}, &treeOrder3)
 
-	btree.Clear()
+	tree.Clear()
 	insert_values_sorted_asc := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-	treeTestInsertHelper(t, btree, &insert_values_sorted_asc)
-	treeOrder1 = btree.PreOrderValues()
-	treeOrder2 = btree.InOrderValues()
-	treeOrder3 = btree.PostOrderValues()
+	treeTestInsertHelper(t, tree, &insert_values_sorted_asc)
+	treeOrder1 = tree.PreOrderValues()
+	treeOrder2 = tree.InOrderValues()
+	treeOrder3 = tree.PostOrderValues()
 	verifyTreeNodeOrder(t, insert_values_sorted_asc, &treeOrder1)
 	verifyTreeNodeOrder(t, insert_values_sorted_asc, &treeOrder2)
 	verifyTreeNodeOrder(t, sortArrayDesc(insert_values_sorted_asc), &treeOrder3)
 
-	btree.Clear()
+	tree.Clear()
 	insert_values_sorted_desc := []int{10, 9, 8, 7, 6, 5, 4, 3, 2, 1}
-	treeTestInsertHelper(t, btree, &insert_values_sorted_desc)
-	treeOrder1 = btree.PreOrderValues()
-	treeOrder2 = btree.InOrderValues()
-	treeOrder3 = btree.PostOrderValues()
+	treeTestInsertHelper(t, tree, &insert_values_sorted_desc)
+	treeOrder1 = tree.PreOrderValues()
+	treeOrder2 = tree.InOrderValues()
+	treeOrder3 = tree.PostOrderValues()
 	verifyTreeNodeOrder(t, insert_values_sorted_desc, &treeOrder1)
 	sortedAsc := sortArrayAsc(insert_values_sorted_desc)
 	verifyTreeNodeOrder(t, sortedAsc, &treeOrder2)
 	verifyTreeNodeOrder(t, sortedAsc, &treeOrder3)
 	//
-	btree.Clear()
+	tree.Clear()
 	insert_values = getArrayOfRandomUniqueValues(30)
-	treeTestInsertHelper(t, btree, &insert_values)
-	treeOrder1 = btree.InOrderValues()
+	treeTestInsertHelper(t, tree, &insert_values)
+	treeOrder1 = tree.InOrderValues()
 	verifyTreeNodeOrder(t, sortArrayAsc(insert_values), &treeOrder1)
 
 }
 
-func testSizeMinMaxAndClear(t *testing.T) {
+func testHeapInsertAndPreInAndPostOrderValues(t *testing.T, tree trees.MinMaxTree[int]) {
+	//var tree trees.MinMaxTree[int]
+	//tree = trees.NewMinHeap[int]()
+	//tree = trees.NewMaxHeap[int]()
+	tree.Clear()
+
+	insert_values := []int{20, 10, 30, 9, 11, 21, 31}
+	treeTestInsertHelper(t, tree, &insert_values)
+	treeOrder1 := tree.PreOrderValues()
+	treeOrder2 := tree.InOrderValues()
+	treeOrder3 := tree.PostOrderValues()
+	if tree.GetHeapType() == "min" {
+		verifyTreeNodeOrder(t, []int{9, 20, 10, 11, 30, 21, 31}, &treeOrder1)
+		verifyTreeNodeOrder(t, []int{9, 10, 11, 20, 21, 30, 31}, &treeOrder2)
+		verifyTreeNodeOrder(t, []int{11, 10, 21, 31, 30, 20, 9}, &treeOrder3)
+	} else {
+		//verifyTreeNodeOrder(t, []int{31, 9, 20, 10, 11, 30, 21}, &treeOrder1)
+		verifyTreeNodeOrder(t, []int{9, 10, 11, 20, 21, 30, 31}, &treeOrder2)
+		//verifyTreeNodeOrder(t, []int{9, 11, 10, 21, 30, 20, 31}, &treeOrder3)
+	}
+
+	tree.Clear()
+	insert_values_sorted_asc := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	treeTestInsertHelper(t, tree, &insert_values_sorted_asc)
+	treeOrder1 = tree.PreOrderValues()
+	treeOrder2 = tree.InOrderValues()
+	treeOrder3 = tree.PostOrderValues()
+	if tree.GetHeapType() == "min" {
+		verifyTreeNodeOrder(t, insert_values_sorted_asc, &treeOrder1)
+		verifyTreeNodeOrder(t, insert_values_sorted_asc, &treeOrder2)
+		verifyTreeNodeOrder(t, sortArrayDesc(insert_values_sorted_asc), &treeOrder3)
+	} else {
+		verifyTreeNodeOrder(t, []int{10, 1, 2, 3, 4, 5, 6, 7, 8, 9}, &treeOrder1)
+		verifyTreeNodeOrder(t, insert_values_sorted_asc, &treeOrder2)
+		verifyTreeNodeOrder(t, []int{9, 8, 7, 6, 5, 4, 3, 2, 1, 10}, &treeOrder3)
+	}
+
+	tree.Clear()
+	insert_values_sorted_desc := []int{10, 9, 8, 7, 6, 5, 4, 3, 2, 1}
+	treeTestInsertHelper(t, tree, &insert_values_sorted_desc)
+	treeOrder1 = tree.PreOrderValues()
+	treeOrder2 = tree.InOrderValues()
+	treeOrder3 = tree.PostOrderValues()
+	if tree.GetHeapType() == "min" {
+		verifyTreeNodeOrder(t, []int{1, 10, 9, 8, 7, 6, 5, 4, 3, 2}, &treeOrder1)
+		verifyTreeNodeOrder(t, sortArrayAsc(insert_values_sorted_desc), &treeOrder2)
+		verifyTreeNodeOrder(t, []int{2, 3, 4, 5, 6, 7, 8, 9, 10, 1}, &treeOrder3)
+	} else {
+		verifyTreeNodeOrder(t, []int{10, 9, 8, 7, 6, 5, 4, 3, 2, 1}, &treeOrder1)
+		sortedAsc := sortArrayAsc(insert_values_sorted_desc)
+		verifyTreeNodeOrder(t, sortedAsc, &treeOrder2)
+		verifyTreeNodeOrder(t, sortedAsc, &treeOrder3)
+	}
+
+	//
+	tree.Clear()
+	insert_values = getArrayOfRandomUniqueValues(30)
+	treeTestInsertHelper(t, tree, &insert_values)
+	treeOrder1 = tree.InOrderValues()
+	verifyTreeNodeOrder(t, sortArrayAsc(insert_values), &treeOrder1)
+}
+
+func testSizeMinMaxAndClear(t *testing.T, tree trees.Tree[int]) {
+	tree.Clear()
 	//create tree and sanity check
-	btree := trees.NewBinaryTree[int]()
 	insert_values := getArrayOfRandomUniqueValues(20)
-	treeTestInsertHelper(t, btree, &insert_values)
-	verifyTree(t, btree, insert_values)
+	treeTestInsertHelper(t, tree, &insert_values)
+	verifyTree(t, tree, insert_values)
 
 	insert_values = sortArrayAsc(insert_values)
-	minVal := btree.Min()
-	maxVal := btree.Max()
+	minVal := tree.Min()
+	maxVal := tree.Max()
 
 	if minVal != insert_values[0] {
 		t.Fatalf("Min did not return correct values. got %v, expected %v", minVal, insert_values[0])
@@ -64,54 +125,55 @@ func testSizeMinMaxAndClear(t *testing.T) {
 		t.Fatalf("Max did not return correct values. got %v, expected %v", maxVal, insert_values[len(insert_values)-1])
 	}
 
-	btree.Clear()
-	if btree.Size() != 0 || btree.Root() != nil {
+	tree.Clear()
+	if tree.Size() != 0 || tree.Root() != nil {
 		t.Fatalf("Clear did not clear all values")
 	}
 
 }
 
-func testRemove(t *testing.T) {
+func testRemove(t *testing.T, tree trees.Tree[int]) {
+	tree.Clear()
 	//create tree and sanity check
-	btree := trees.NewBinaryTree[int]()
+	//tree := trees.NewBinaryTree[int]()
 	insert_values := getArrayOfRandomUniqueValues(20)
-	nodes := treeTestInsertHelper(t, btree, &insert_values)
-	verifyTree(t, btree, insert_values)
+	nodes := treeTestInsertHelper(t, tree, &insert_values)
+	verifyTree(t, tree, insert_values)
 
 	//Testing RemoveNode
 	for _, node := range nodes {
-		btree.RemoveNode(node)
+		tree.RemoveNode(node)
 		insert_values = insert_values[1:]
-		verifyTree(t, btree, insert_values)
+		verifyTree(t, tree, insert_values)
 	}
-	if btree.Size() != 0 {
-		t.Fatalf("tree failed to remove all nodes. tree has size %d, expected 0", btree.Size())
+	if tree.Size() != 0 {
+		t.Fatalf("tree failed to remove all nodes. tree has size %d, expected 0", tree.Size())
 	}
 
 	//testing RemoveValue
-	btree.Clear()
+	tree.Clear()
 	insert_values = getArrayOfRandomUniqueValues(20)
-	nodes = treeTestInsertHelper(t, btree, &insert_values)
+	nodes = treeTestInsertHelper(t, tree, &insert_values)
 	for _, node := range nodes {
-		btree.RemoveValue(node.Value)
+		tree.RemoveValue(node.Value)
 		insert_values = insert_values[1:]
-		verifyTree(t, btree, insert_values)
+		verifyTree(t, tree, insert_values)
 	}
-	if btree.Size() != 0 {
-		t.Fatalf("tree failed to remove all nodes. tree has size %d, expected 0", btree.Size())
+	if tree.Size() != 0 {
+		t.Fatalf("tree failed to remove all nodes. tree has size %d, expected 0", tree.Size())
 	}
 
 	//Testing  RemoveValue with a tree that has duplicate values
-	btree.Clear()
+	tree.Clear()
 	insert_values = getArrayOfRandomUniqueValues(10)
 
 	for _, val := range insert_values {
 		insert_values = append(insert_values, val)
 	}
-	nodes = treeTestInsertHelper(t, btree, &insert_values)
+	nodes = treeTestInsertHelper(t, tree, &insert_values)
 	for len(insert_values) > 0 {
-		btree.RemoveValue(insert_values[0])
-		treeSize := btree.Size()
+		tree.RemoveValue(insert_values[0])
+		treeSize := tree.Size()
 		if treeSize != len(insert_values)-2 {
 			t.Fatalf("tree size incorrect after removing duplicate values.  got %d, expected %d", treeSize, len(insert_values)-2)
 		}
@@ -120,31 +182,118 @@ func testRemove(t *testing.T) {
 			values = append(values, insert_values[i])
 		}
 		insert_values = values
-		verifyTree(t, btree, insert_values)
+		verifyTree(t, tree, insert_values)
 	}
 
 	//Testing RemoveValue with a tree that only has duplicate values
-	btree.Clear()
+	tree.Clear()
 	insert_values = []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-	nodes = treeTestInsertHelper(t, btree, &insert_values)
+	nodes = treeTestInsertHelper(t, tree, &insert_values)
 	for _, val := range insert_values {
-		btree.RemoveValue(val)
-		treeSize := btree.Size()
+		tree.RemoveValue(val)
+		treeSize := tree.Size()
 		if treeSize != 0 {
 			t.Fatalf("Tree failed to remove values. tree has size %d, expected 0", treeSize)
 		}
 		insert_values = []int{}
-		verifyTree(t, btree, insert_values)
+		verifyTree(t, tree, insert_values)
 	}
 
 }
 
-func testContainsFindAndFindFirst(t *testing.T) {
+func testHeapPop(t *testing.T, tree trees.MinMaxTree[int]) {
+
+	tree.Clear()
+
+	insertValues := getArrayOfRandomUniqueValues(10)
+	treeTestInsertHelper(t, tree, &insertValues)
+	treeInOrderVals := tree.InOrderValues()
+	verifyTreeNodeOrder(t, sortArrayAsc(insertValues), &treeInOrderVals)
+
+	sortedInsertedVals := sortArrayAsc(insertValues)
+
+	for i := 0; i < len(insertValues); i++ {
+
+		tree.Pop()
+		if tree.GetHeapType() == "min" {
+			sortedInsertedVals = sortedInsertedVals[1:]
+		} else {
+			sortedInsertedVals = sortedInsertedVals[:len(sortedInsertedVals)-1]
+		}
+
+		treeOrder := tree.InOrderValues()
+		verifyTreeNodeOrder(t, sortedInsertedVals, &treeOrder)
+
+	}
+
+	if tree.Size() != 0 {
+		t.Fatalf("HeapPop expected tree size of 0 but got %v", tree.Size())
+	}
+
+	tree.Clear()
+	insertValues = getArrayOfRandomUniqueValues(30)
+	treeTestInsertHelper(t, tree, &insertValues)
+	treeInOrderVals = tree.InOrderValues()
+	verifyTreeNodeOrder(t, sortArrayAsc(insertValues), &treeInOrderVals)
+
+	//if tree.GetHeapType() == "min" {
+	//	for i, val := range treeInOrderVals {
+	//		var poppedVal int
+	//		poppedNode := tree.Pop()
+	//
+	//		if poppedNode == nil {
+	//			t.Fatalf("HeapPop expected a non-nil node")
+	//		}
+	//
+	//		poppedVal = poppedNode.Value
+	//
+	//		if poppedVal != val {
+	//			t.Fatalf("HeapPop did not return correct value. got %v, expected %v", poppedNode.Value, val)
+	//		}
+	//
+	//		if i+1 >= len(treeInOrderVals) {
+	//			if tree.Root() != nil {
+	//				t.Fatalf("Heap tree should have popped all values but tree is still not empty. Got a root of %v, expected nil", tree.Root().Value)
+	//			}
+	//		} else {
+	//			if tree.Root().Value != treeInOrderVals[i+1] {
+	//				t.Fatalf("Heap tree new root should be the next maximum value of %v but got %v", treeInOrderVals[i+1], tree.Root().Value)
+	//			}
+	//		}
+	//	}
+	//} else {
+	//	for i := len(treeInOrderVals) - 1; i >= 0; i-- {
+	//		val := treeInOrderVals[i]
+	//		poppedNode := tree.Pop()
+	//		if poppedNode == nil {
+	//			t.Fatalf("HeapPop expected a non-nil node")
+	//		}
+	//
+	//		if poppedNode.Value != val {
+	//			t.Fatalf("HeapPop did not return correct value. got %v, expected %v", poppedNode.Value, val)
+	//		}
+	//
+	//		if i-1 < 0 {
+	//			if tree.Root() != nil {
+	//				t.Fatalf("Heap tree should have popped all values but tree is still not empty. Got a root of %v, expected nil", tree.Root().Value)
+	//			}
+	//		} else {
+	//			if tree.Root().Value != treeInOrderVals[i-1] {
+	//				t.Fatalf("Heap tree new root should be the next maximum value of %v but got %v", treeInOrderVals[i-1], tree.Root().Value)
+	//			}
+	//		}
+	//	}
+	//}
+
+}
+
+func testContainsFindAndFindFirst(t *testing.T, tree trees.Tree[int]) {
+	tree.Clear()
 	//create tree, insert values, and do small sanity check
-	btree := trees.NewBinaryTree[int]()
+
 	insert_values := getArrayOfRandomUniqueValues(10)
-	treeTestInsertHelper(t, btree, &insert_values)
-	verifyTree(t, btree, insert_values)
+	treeTestInsertHelper(t, tree, &insert_values)
+	verifyTree(t, tree, insert_values)
 
 	//test contains and find with values that are definitely not in the tree
 	var non_inserted_vals []int
@@ -152,10 +301,10 @@ func testContainsFindAndFindFirst(t *testing.T) {
 		non_inserted_vals = append(non_inserted_vals, val+len(insert_values))
 	}
 	for i := 0; i < len(insert_values); i++ {
-		shouldBeTrue := btree.Contains(insert_values[i])
-		shouldBeFalse := btree.Contains(non_inserted_vals[i])
-		allFound := btree.Find(insert_values[i])
-		shouldReturnEmpty := btree.Find(non_inserted_vals[i])
+		shouldBeTrue := tree.Contains(insert_values[i])
+		shouldBeFalse := tree.Contains(non_inserted_vals[i])
+		allFound := tree.Find(insert_values[i])
+		shouldReturnEmpty := tree.Find(non_inserted_vals[i])
 
 		if !shouldBeTrue {
 			t.Fatalf("Contains did NOT return true for insert_values %v, expected true", insert_values[i])
@@ -172,24 +321,24 @@ func testContainsFindAndFindFirst(t *testing.T) {
 	}
 
 	//Test Find and FindFirst with a tree having duplicate values
-	btree.Clear()
+	tree.Clear()
 	insert_values = getArrayOfRandomUniqueValues(10)
 
 	for _, val := range insert_values {
 		insert_values = append(insert_values, val)
 	}
-	/*nodes := */ treeTestInsertHelper(t, btree, &insert_values)
-	verifyTree(t, btree, insert_values)
+	/*nodes := */ treeTestInsertHelper(t, tree, &insert_values)
+	verifyTree(t, tree, insert_values)
 	for i := 0; i < len(insert_values)/2; i++ {
-		allFound := btree.Find(insert_values[i])
+		allFound := tree.Find(insert_values[i])
 		if len(allFound) < 2 || len(allFound) > 2 || allFound[0].Value != insert_values[i] || allFound[0].Value != allFound[1].Value {
 			t.Fatalf("Find did not return all expected values. got %v for find value  %v", allFound, insert_values[i])
 		}
 	}
 
 	for i := 0; i < len(insert_values)/2; i++ {
-		allFound := btree.Find(insert_values[i])
-		firstFound := btree.FindFirst(insert_values[i])
+		allFound := tree.Find(insert_values[i])
+		firstFound := tree.FindFirst(insert_values[i])
 
 		if len(allFound) < 2 || len(allFound) > 2 || allFound[0].Value != insert_values[i] || allFound[0].Value != allFound[1].Value {
 			t.Fatalf("Find did not return all expected values. got %v for find value  %v", allFound, insert_values[i])
@@ -205,28 +354,47 @@ func testContainsFindAndFindFirst(t *testing.T) {
 		if allFound[0] != firstFound {
 			nextNodeInAllFoundIdx = 0
 		}
-		btree.RemoveNode(firstFound)
-		firstFound = btree.FindFirst(insert_values[i])
+		tree.RemoveNode(firstFound)
+		firstFound = tree.FindFirst(insert_values[i])
 		if firstFound != allFound[nextNodeInAllFoundIdx] {
 			t.Fatalf("FirstFound called a second time did not find the duplicate value")
 		}
 	}
 
 	//Test Find and FindFirst with a tree of all same values
-	btree.Clear()
+	tree.Clear()
 	insert_values = []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-	treeTestInsertHelper(t, btree, &insert_values)
-	verifyTree(t, btree, insert_values)
-	allFound := btree.Find(insert_values[0])
+	treeTestInsertHelper(t, tree, &insert_values)
+	verifyTree(t, tree, insert_values)
+	allFound := tree.Find(insert_values[0])
 	if len(allFound) != len(insert_values) {
 		t.Fatalf("Find should have gotten all %v values but got %v for find value  %v", len(insert_values), allFound, insert_values[0])
 	}
 
 }
 
+func runCommonTreeTests(t *testing.T, tree trees.Tree[int]) {
+	testSizeMinMaxAndClear(t, tree)
+	testRemove(t, tree)
+	testContainsFindAndFindFirst(t, tree)
+}
+
 func TestBinaryTree(t *testing.T) {
-	testInsertAndPreInAndPostOrderValues(t)
-	testSizeMinMaxAndClear(t)
-	testRemove(t)
-	testContainsFindAndFindFirst(t)
+	btree := trees.NewBinaryTree[int]()
+	testInsertAndPreInAndPostOrderValues(t, btree)
+	runCommonTreeTests(t, btree)
+
+}
+
+func TestMinAndMaxHeap(t *testing.T) {
+
+	minHeap := trees.NewMinHeap[int]()
+	testHeapInsertAndPreInAndPostOrderValues(t, minHeap)
+	testHeapPop(t, minHeap)
+	runCommonTreeTests(t, minHeap)
+
+	maxHeap := trees.NewMaxHeap[int]()
+	testHeapInsertAndPreInAndPostOrderValues(t, maxHeap)
+	testHeapPop(t, maxHeap)
+	runCommonTreeTests(t, maxHeap)
 }

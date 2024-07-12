@@ -39,12 +39,14 @@ func binaryTreeInsertNode[T TreeNodeValue](current, insertNode *TreeNode[T]) {
 	if insertNode.Value <= current.Value {
 		if current.left == nil {
 			current.left = insertNode
+			return
 		}
 		binaryTreeInsertNode(current.left, insertNode)
 
 	} else {
 		if current.right == nil {
 			current.right = insertNode
+			return
 		}
 		binaryTreeInsertNode(current.right, insertNode)
 	}
@@ -52,7 +54,7 @@ func binaryTreeInsertNode[T TreeNodeValue](current, insertNode *TreeNode[T]) {
 }
 
 // removes any node that in within currents sub trees else is current == remove then this will not work
-func removeNodeHelper[T TreeNodeValue](current *TreeNode[T], remove *TreeNode[T]) {
+func detachNodeFromTree[T TreeNodeValue](current *TreeNode[T], remove *TreeNode[T]) {
 	if current == nil || remove == nil {
 		return
 	}
@@ -77,14 +79,14 @@ func removeNodeHelper[T TreeNodeValue](current *TreeNode[T], remove *TreeNode[T]
 		remove.left = nil
 		remove.right = nil
 	} else {
-		removeNodeHelper(current.left, remove)
-		removeNodeHelper(current.right, remove)
+		detachNodeFromTree(current.left, remove)
+		detachNodeFromTree(current.right, remove)
 	}
 
 }
 
 // Be careful if root is not actually a root node then the tree will be messed up and cause issues when doing other operations
-func removeRootNode[T TreeNodeValue](root **TreeNode[T]) {
+func detachRootNode[T TreeNodeValue](root **TreeNode[T]) {
 	if root == nil {
 		return
 	}

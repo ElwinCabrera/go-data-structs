@@ -41,7 +41,7 @@ func (t *MinHeap[T]) RemoveNode(removeNode *TreeNode[T]) {
 	if removeNode == t.root {
 		t.Pop()
 	} else {
-		removeNodeHelper(t.root, removeNode)
+		detachNodeFromTree(t.root, removeNode)
 	}
 	removeNode = nil
 
@@ -50,17 +50,31 @@ func (t *MinHeap[T]) RemoveNode(removeNode *TreeNode[T]) {
 
 func (t *MinHeap[T]) Pop() *TreeNode[T] {
 	oldRoot := t.root
+	if t.root.left == nil && t.root.right == nil {
+		t.root = nil
+		return oldRoot
+	}
 	minLeft := oldRoot.left
 	minRight := oldRoot.right
-	minHelper(t.root.left, &minLeft)
+	minHelper(t.root.left, &minLeft) // not needed bc if root is always minimum then there will never be a node to the left of root but might leave it in just in case we want to implement a heap without the binary tree rules
 	minHelper(t.root.right, &minRight)
 
 	var newRoot *TreeNode[T]
-	if minLeft.Value < minRight.Value {
-		newRoot = minLeft
-	} else {
+
+	if minLeft == nil { //will Always be this case for min heap following binary tree insert rule
 		newRoot = minRight
+	} else if minRight == nil {
+		newRoot = minLeft
+	} else if minLeft != nil && minRight != nil { // will probably be this case if we are following the binary tree rules for insert after the root node but will leave in to make implementation more versatile
+		if minLeft.Value < minRight.Value {
+			newRoot = minLeft
+		} else {
+			newRoot = minRight
+		}
 	}
+
+	detachNodeFromTree(t.root, newRoot)
+
 	newRoot.left = t.root.left
 	newRoot.right = t.root.right
 	t.root = newRoot
@@ -140,4 +154,8 @@ func (t *MinHeap[T]) PostOrderValues() []*TreeNode[T] {
 
 func (t *MinHeap[T]) Root() *TreeNode[T] {
 	return t.root
+}
+
+func (t *MinHeap[T]) GetHeapType() string {
+	return "min"
 }

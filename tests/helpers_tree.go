@@ -53,3 +53,41 @@ func verifyTreeNodeOrder[T trees.TreeNodeValue](t *testing.T, expectedOrder []T,
 		}
 	}
 }
+
+//func getHeapExpectedInOrderValuesFromInsertedValues[T trees.TreeNodeValue](insertedValues []T, heapType string) []T {
+//	if insertedValues == nil || len(insertedValues) == 0 {
+//		return insertedValues
+//	}
+//
+//	expectedInOrderValues := sortArrayAsc(insertedValues)
+//
+//	minVal, maxVal := insertedValues[0], insertedValues[0]
+//
+//	for _, value := range insertedValues {
+//		if value < minVal {
+//			minVal = value
+//		}
+//		if value > maxVal {
+//			maxVal = value
+//		}
+//	}
+//
+//	removeIdxForMaxVal := 0
+//	removeIdxForMinVal := 0
+//	for i, value := range expectedInOrderValues {
+//		if value == maxVal {
+//			removeIdxForMaxVal = i
+//		}
+//		if value == minVal {
+//			removeIdxForMinVal = i
+//		}
+//	}
+//
+//	if heapType == "min" {
+//
+//	} else if heapType == "max" {
+//
+//	}
+//
+//	return expectedInOrderValues
+//}

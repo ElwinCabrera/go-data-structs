@@ -28,9 +28,9 @@ func (t *BinaryTree[T]) RemoveNode(removeNode *TreeNode[T]) {
 	}
 
 	if removeNode == t.root {
-		removeRootNode(&t.root)
+		detachRootNode(&t.root)
 	} else {
-		removeNodeHelper(t.root, removeNode)
+		detachNodeFromTree(t.root, removeNode)
 	}
 	removeNode = nil
 

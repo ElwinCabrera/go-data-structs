@@ -15,7 +15,7 @@ func (t *MaxHeap[T]) Insert(value T) *TreeNode[T] {
 	if t.root == nil {
 		newNode = &TreeNode[T]{Value: value}
 		t.root = newNode
-	} else if value < t.root.Value {
+	} else if value > t.root.Value {
 		oldRoot := t.root
 		newNode = &TreeNode[T]{Value: value}
 		newNode.left = oldRoot.left
@@ -41,7 +41,7 @@ func (t *MaxHeap[T]) RemoveNode(removeNode *TreeNode[T]) {
 	if removeNode == t.root {
 		t.Pop()
 	} else {
-		removeNodeHelper(t.root, removeNode)
+		detachNodeFromTree(t.root, removeNode)
 	}
 	removeNode = nil
 
@@ -50,17 +50,31 @@ func (t *MaxHeap[T]) RemoveNode(removeNode *TreeNode[T]) {
 
 func (t *MaxHeap[T]) Pop() *TreeNode[T] {
 	oldRoot := t.root
+	if t.root.left == nil && t.root.right == nil {
+		t.root = nil
+		return oldRoot
+	}
 	maxLeft := oldRoot.left
 	maxRight := oldRoot.right
 	maxHelper(t.root.left, &maxLeft)
 	maxHelper(t.root.right, &maxRight)
 
 	var newRoot *TreeNode[T]
-	if maxLeft.Value < maxRight.Value {
-		newRoot = maxLeft
-	} else {
+
+	if maxLeft == nil {
 		newRoot = maxRight
+	} else if maxRight == nil { //will Always be this case for min heap following binary tree insert rule
+		newRoot = maxLeft
+	} else if maxLeft != nil && maxRight != nil { // will probably be this case if we are following the binary tree rules for insert after the root node but will leave in to make implementation more versatile
+		if maxLeft.Value < maxRight.Value {
+			newRoot = maxLeft
+		} else {
+			newRoot = maxRight
+		}
 	}
+
+	detachNodeFromTree(t.root, newRoot)
+
 	newRoot.left = t.root.left
 	newRoot.right = t.root.right
 	t.root = newRoot
@@ -140,4 +154,8 @@ func (t *MaxHeap[T]) PostOrderValues() []*TreeNode[T] {
 
 func (t *MaxHeap[T]) Root() *TreeNode[T] {
 	return t.root
+}
+
+func (t *MaxHeap[T]) GetHeapType() string {
+	return "max"
 }
