@@ -52,3 +52,23 @@ func sortArrayDesc[T comarableValues](array []T) []T {
 	sort.Slice(sorted, sortFunc)
 	return sorted
 }
+
+func arraysEqual(arr1, arr2 []int) bool {
+	if len(arr1) != len(arr2) {
+		return false
+	}
+	for i := 0; i < len(arr1); i++ {
+		if arr1[i] != arr2[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func getIntArrayFromAnyArray(anyArr []any) []int {
+	var intArr []int
+	for _, value := range anyArr {
+		intArr = append(intArr, value.(int))
+	}
+	return intArr
+}

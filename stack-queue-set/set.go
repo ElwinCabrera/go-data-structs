@@ -54,7 +54,7 @@ func (set *Set) Clear() {
 func (set *Set) Values() []any {
 	var values []any
 	it := list.InitListIterator(set.list)
-	for it := it.Begin(); it != nil; it = it.Next() {
+	for it := it.Begin(); it.Get() != nil; it = it.Next() {
 		values = append(values, it.Get().Value)
 	}
 	return values
