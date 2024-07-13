@@ -144,6 +144,82 @@ func test_Remove(t *testing.T, l list.List, size int) {
 	}
 }
 
+func test_Find(t *testing.T, l list.List, size int) {
+	l.Clear()
+
+	_, insert_values := insertListRandomData(l, size)
+
+	if !verifyListContents(l, insert_values) {
+		t.Fatalf("Find test failed to verify random list contents\n")
+	}
+	var not_inserted_values []int
+	for _, value := range insert_values {
+		not_inserted_values = append(not_inserted_values, value+len(insert_values))
+	}
+	for _, value := range insert_values {
+		foundVals := l.Find(value)
+		if len(foundVals) == 0 || len(foundVals) > 1 {
+			t.Fatalf("Find test failed to find values. expected %v, got %v", value, foundVals)
+		}
+		if foundVals[0].Value != value {
+			t.Fatalf("Find test found incorrect value. expected %v, got %v", value, foundVals)
+		}
+	}
+
+	for _, value := range not_inserted_values {
+		foundVals := l.Find(value)
+		if len(foundVals) != 0 {
+			t.Fatalf("Find found value %v when it was not supposed to find any value", value)
+		}
+	}
+
+	//test find with duplicates
+	l.Clear()
+
+	_, insert_values = insertListRandomData(l, size)
+	for i := 0; i < size; i++ {
+		val := insert_values[i]
+		insert_values = append(insert_values, val)
+		l.InsertEnd(val)
+	}
+
+	if !verifyListContents(l, insert_values) {
+		t.Fatalf("Find test failed to verify random list contents\n")
+	}
+
+	for _, value := range insert_values {
+		foundVals := l.Find(value)
+		if len(foundVals) != 2 || len(foundVals) > 2 {
+			t.Fatalf("Find test failed to find values. expected %v twice, got %v", value, foundVals)
+		}
+		if foundVals[0].Value != value && foundVals[1].Value != value {
+			t.Fatalf("Find test found incorrect values. expected %v twice, got %v", value, foundVals)
+		}
+	}
+
+	//test find with all duplicate values
+	l.Clear()
+	var allDuplicates []int
+	dupVal := 7
+	for i := 0; i < size; i++ {
+		allDuplicates = append(allDuplicates, dupVal)
+		l.InsertEnd(dupVal)
+	}
+	if !verifyListContents(l, allDuplicates) {
+		t.Fatalf("Find test failed to verify random list contents\n")
+	}
+
+	foundVals := l.Find(dupVal)
+	if len(foundVals) != len(allDuplicates) || len(foundVals) > len(allDuplicates) {
+		t.Fatalf("Find test failed to find values. expected %v %v times, got %v", dupVal, len(allDuplicates), foundVals)
+	}
+	for _, node := range foundVals {
+		if node.Value != dupVal {
+			t.Fatalf("Find test found incorrect values. expected %v %v times, got %v", dupVal, len(allDuplicates), foundVals)
+		}
+	}
+
+}
 func Test_SinglyLinkedList(t *testing.T) {
 	ll := list.InitSinglyLinkedList()
 	size := 10
@@ -154,6 +230,7 @@ func Test_SinglyLinkedList(t *testing.T) {
 	test_PopFront(t, ll, size)
 	test_PopBack(t, ll, size)
 	test_Remove(t, ll, size)
+	test_Find(t, ll, size)
 }
 
 func Test_DoublyLinkedList(t *testing.T) {
@@ -166,4 +243,5 @@ func Test_DoublyLinkedList(t *testing.T) {
 	test_PopFront(t, ll, size)
 	test_PopBack(t, ll, size)
 	test_Remove(t, ll, size)
+	test_Find(t, ll, size)
 }

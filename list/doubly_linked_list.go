@@ -124,6 +124,18 @@ func (dll *DoublyLinkedList) PopBack() *Node {
 
 }
 
+func (dll *DoublyLinkedList) Find(v any) []*Node {
+	var foundNodes []*Node
+	currentNode := dll.head
+	for currentNode != nil {
+		if currentNode.Value == v {
+			foundNodes = append(foundNodes, currentNode)
+		}
+		currentNode = currentNode.next
+	}
+	return foundNodes
+}
+
 func (dll *DoublyLinkedList) Remove(n *Node) bool {
 	if dll.head == nil {
 		return false // this is more of an error than anything else

@@ -95,6 +95,18 @@ func (sll *SinglyLinkedList) PopBack() *Node {
 
 }
 
+func (sll *SinglyLinkedList) Find(v any) []*Node {
+	var foundNodes []*Node
+	currentNode := sll.head
+	for currentNode != nil {
+		if currentNode.Value == v {
+			foundNodes = append(foundNodes, currentNode)
+		}
+		currentNode = currentNode.next
+	}
+	return foundNodes
+}
+
 func (sll *SinglyLinkedList) Remove(n *Node) bool {
 	if sll.head == nil {
 		return false // this is more of an error than anything else
