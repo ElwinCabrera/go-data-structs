@@ -1,6 +1,9 @@
 package stack_queue_set
 
-import "github.com/ElwinCabrera/go-data-structs/list"
+import (
+	"fmt"
+	"github.com/ElwinCabrera/go-data-structs/list"
+)
 
 type Queue struct {
 	list     list.List
@@ -17,6 +20,9 @@ func (queue *Queue) Push(value any) {
 }
 
 func (queue *Queue) Dequeue() any {
+	if queue.IsEmpty() {
+		return nil
+	}
 	return queue.list.PopFront().Value
 }
 
@@ -50,4 +56,8 @@ func (queue *Queue) Values() []any {
 		values = append(values, it.Get().Value)
 	}
 	return values
+}
+
+func (queue *Queue) String() string {
+	return fmt.Sprintf("%v", queue.Values())
 }

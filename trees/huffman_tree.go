@@ -2,7 +2,7 @@ package trees
 
 import (
 	"github.com/ElwinCabrera/go-data-structs/bits/bit_sequence"
-	"github.com/ElwinCabrera/go-data-structs/list"
+	stack_queue_set "github.com/ElwinCabrera/go-data-structs/stack-queue-set"
 )
 
 type HuffmanTree[T comparable] struct {
@@ -11,14 +11,14 @@ type HuffmanTree[T comparable] struct {
 	huffmanCodes map[T]bit_sequence.BitSequence
 }
 
-func NewTreeFromFrequencyMap[T comparable](frequencyMap map[T]int) *HuffmanTree[T] {
-	ht := &HuffmanTree[T]{}
+func NewHuffmanTreeFromFrequencyMap[T comparable](frequencyMap map[T]int) *HuffmanTree[T] {
+	ht := &HuffmanTree[T]{frequencyMap: frequencyMap}
 	ll := ht.getSortedListFromFrequencyMap()
 	ht.buildTreeFromSortedList(ll)
 	return ht
 }
 
-func NewTreeFromHuffmanCodes[T comparable](huffmanCodes map[T]bit_sequence.BitSequence) *HuffmanTree[T] {
+func NewHuffmanTreeFromHuffmanCodes[T comparable](huffmanCodes map[T]bit_sequence.BitSequence) *HuffmanTree[T] {
 	root := &TreeNode[T]{IgnoreValue: true, Weight: -1}
 	ht := &HuffmanTree[T]{root: root, huffmanCodes: huffmanCodes}
 
@@ -28,38 +28,37 @@ func NewTreeFromHuffmanCodes[T comparable](huffmanCodes map[T]bit_sequence.BitSe
 	return ht
 }
 
-func (ht *HuffmanTree[T]) getSortedListFromFrequencyMap() list.List {
-	ll := list.InitDoublyLinkedList()
+func (ht *HuffmanTree[T]) getSortedListFromFrequencyMap() stack_queue_set.PriorityQueue {
+	//ll := list.InitDoublyLinkedList()
+	priorityQ := stack_queue_set.NewPriorityQueue(false)
 	for val, weight := range ht.frequencyMap {
 		treeNode := &TreeNode[T]{Value: val, Weight: weight}
-		ll.InsertSortedDescBasedOnNodeWeight(treeNode, weight)
+		//ll.InsertSortedDescBasedOnNodeWeight(treeNode, weight)
+		priorityQ.Push(treeNode, weight)
 	}
-	return ll
+	return priorityQ
 }
 
-func (ht *HuffmanTree[T]) buildTreeFromSortedList(ll list.List) {
+func (ht *HuffmanTree[T]) buildTreeFromSortedList(ll stack_queue_set.PriorityQueue) {
 
 	done := false
 	for !done {
-		listNode1 := ll.PopFront()
-		listNode2 := ll.PopFront()
+		leftTree := ll.Dequeue().(*TreeNode[T])
+		rightTree := ll.Dequeue().(*TreeNode[T])
 
-		var leftTree *TreeNode[T] = nil
-		var rightTree *TreeNode[T] = nil
 		combinedWeight := 0
-		if listNode1 != nil {
-			combinedWeight += listNode1.Weight
-			leftTree = listNode1.Value.(*TreeNode[T])
+		if leftTree != nil {
+			combinedWeight += leftTree.Weight
 		}
-		if listNode2 != nil {
-			combinedWeight += listNode2.Weight
-			rightTree = listNode2.Value.(*TreeNode[T])
+		if rightTree != nil {
+			combinedWeight += rightTree.Weight
 		}
-		if ll.Head() == nil {
+		if ll.IsEmpty() {
 			done = true
 		}
+
 		treeNode := &TreeNode[T]{IgnoreValue: true, Weight: combinedWeight, left: leftTree, right: rightTree}
-		ll.InsertSortedDescBasedOnNodeWeight(treeNode, combinedWeight)
+		ll.Push(treeNode, combinedWeight)
 	}
 
 	ht.root = ll.PopFront().Value.(*TreeNode[T])
