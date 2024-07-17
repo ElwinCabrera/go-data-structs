@@ -6,7 +6,7 @@ type TreeNodeValue interface {
 
 type TreeNode[T any] struct {
 	Value       T
-	weight      int
+	Weight      int
 	IgnoreValue bool
 	left        *TreeNode[T]
 	right       *TreeNode[T]

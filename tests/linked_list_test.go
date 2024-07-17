@@ -17,14 +17,14 @@ func test_InsertEnd(t *testing.T, l list.List, size int) {
 
 	}
 	insert_values = append(insert_values, 1)
-	l.InsertEnd(insert_values[idx])
+	l.InsertEnd(insert_values[idx], 0)
 	idx++
 
 	if !verifyListContents(l, insert_values) {
 		t.Fatalf("Test_InsertEnd(..) test failed to verify list contents\n")
 	}
 	insert_values = append(insert_values, 2)
-	l.InsertEnd(insert_values[idx])
+	l.InsertEnd(insert_values[idx], 0)
 	idx++
 	if !verifyListContents(l, insert_values) {
 		t.Fatalf("Test_InsertEnd(..) test failed to verify list contents\n")
@@ -39,13 +39,49 @@ func test_InsertEnd(t *testing.T, l list.List, size int) {
 
 }
 
+func test_InsertSorted(t *testing.T, l list.List, size int) {
+
+	//Test list inserting values sorted based weight ascending
+	l.Clear()
+	insert_values := getArrayOfRandomNonNegativeUniqueValues(size)
+	insert_weights := getArrayOfRandomNonNegativeUniqueValues(size)
+	for i := 0; i < size; i++ {
+		l.InsertSortedAscBasedOnNodeWeight(insert_values[i], insert_weights[i])
+	}
+	it := list.InitListIterator(l)
+	idx := 0
+	for it = it.Begin(); it.Get() != nil; it = it.Next() {
+		if it.Get().Weight != idx {
+			t.Fatalf("Test_InsertSorted(..) test failed to verify list contents\n")
+		}
+		idx++
+	}
+
+	//Test list inserting values sorted based weight ascending
+	l.Clear()
+	insert_values = getArrayOfRandomNonNegativeUniqueValues(size)
+	insert_weights = getArrayOfRandomNonNegativeUniqueValues(size)
+	for i := 0; i < size; i++ {
+		l.InsertSortedDescBasedOnNodeWeight(insert_values[i], insert_weights[i])
+	}
+	it = list.InitListIterator(l)
+	idx = size - 1
+	for it = it.Begin(); it.Get() != nil; it = it.Next() {
+		if it.Get().Weight != idx {
+			t.Fatalf("Test_InsertSorted(..) test failed to verify list contents\n")
+		}
+		idx--
+	}
+
+}
+
 func test_InsertFront(t *testing.T, l list.List, size int) {
 	l.Clear()
 	_, insert_values := insertListRandomData(l, size)
 
 	l.Clear()
 	for i := len(insert_values) - 1; i >= 0; i-- {
-		l.InsertFront(insert_values[i])
+		l.InsertFront(insert_values[i], 0)
 	}
 	if !verifyListContents(l, insert_values) {
 		t.Fatalf("Test_InsertFront(..) test failed to verify random list contents\n")
@@ -64,7 +100,7 @@ func test_InsertBefore(t *testing.T, l list.List, size int) {
 	it := list.InitListIterator(l)
 	for it := it.Begin(); it.Get() != nil; it = it.Next() {
 		new_val := (i + 1) * -1
-		l.InsertBefore(new_val, it.Get())
+		l.InsertBefore(new_val, 0, it.Get())
 		insert_values = slices.Insert(insert_values, i, new_val)
 		if !verifyListContents(l, insert_values) {
 			t.Fatalf("Test_InsertBefore(..) test failed to verify random list contents\n")
@@ -86,7 +122,7 @@ func test_InsertAfter(t *testing.T, l list.List, size int) {
 	it := list.InitListIterator(l)
 	for it := it.Begin(); it.Get() != nil; it = it.Next().Next() {
 		new_val := (i + 1) * -1
-		l.InsertAfter(new_val, it.Get())
+		l.InsertAfter(new_val, 0, it.Get())
 
 		if i+1 < len(insert_values) {
 			insert_values = slices.Insert(insert_values, i+1, new_val)
@@ -180,7 +216,7 @@ func test_Find(t *testing.T, l list.List, size int) {
 	for i := 0; i < size; i++ {
 		val := insert_values[i]
 		insert_values = append(insert_values, val)
-		l.InsertEnd(val)
+		l.InsertEnd(val, 0)
 	}
 
 	if !verifyListContents(l, insert_values) {
@@ -203,7 +239,7 @@ func test_Find(t *testing.T, l list.List, size int) {
 	dupVal := 7
 	for i := 0; i < size; i++ {
 		allDuplicates = append(allDuplicates, dupVal)
-		l.InsertEnd(dupVal)
+		l.InsertEnd(dupVal, 0)
 	}
 	if !verifyListContents(l, allDuplicates) {
 		t.Fatalf("Find test failed to verify random list contents\n")
@@ -227,6 +263,7 @@ func Test_SinglyLinkedList(t *testing.T) {
 	test_InsertFront(t, ll, size)
 	test_InsertBefore(t, ll, size)
 	test_InsertAfter(t, ll, size)
+	test_InsertSorted(t, ll, size)
 	test_PopFront(t, ll, size)
 	test_PopBack(t, ll, size)
 	test_Remove(t, ll, size)
@@ -240,6 +277,7 @@ func Test_DoublyLinkedList(t *testing.T) {
 	test_InsertFront(t, ll, size)
 	test_InsertBefore(t, ll, size)
 	test_InsertAfter(t, ll, size)
+	test_InsertSorted(t, ll, size)
 	test_PopFront(t, ll, size)
 	test_PopBack(t, ll, size)
 	test_Remove(t, ll, size)

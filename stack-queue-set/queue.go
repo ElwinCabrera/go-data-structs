@@ -12,7 +12,7 @@ func InitQueue() *Queue {
 }
 
 func (queue *Queue) Push(value any) {
-	queue.list.InsertEnd(value)
+	queue.list.InsertEnd(value, 0)
 	queue.last_val = value
 }
 

@@ -12,7 +12,7 @@ func InitStack() *Stack {
 }
 
 func (stack *Stack) Push(value any) {
-	stack.list.InsertEnd(value)
+	stack.list.InsertEnd(value, 0)
 	stack.last_val_pushed = value
 }
 

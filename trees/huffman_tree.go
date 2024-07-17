@@ -19,7 +19,7 @@ func NewTreeFromFrequencyMap[T comparable](frequencyMap map[T]int) *HuffmanTree[
 }
 
 func NewTreeFromHuffmanCodes[T comparable](huffmanCodes map[T]bit_sequence.BitSequence) *HuffmanTree[T] {
-	root := &TreeNode[T]{IgnoreValue: true, weight: -1}
+	root := &TreeNode[T]{IgnoreValue: true, Weight: -1}
 	ht := &HuffmanTree[T]{root: root, huffmanCodes: huffmanCodes}
 
 	for data, bitseq := range huffmanCodes {
@@ -31,7 +31,7 @@ func NewTreeFromHuffmanCodes[T comparable](huffmanCodes map[T]bit_sequence.BitSe
 func (ht *HuffmanTree[T]) getSortedListFromFrequencyMap() list.List {
 	ll := list.InitDoublyLinkedList()
 	for val, weight := range ht.frequencyMap {
-		treeNode := &TreeNode[T]{Value: val, weight: weight}
+		treeNode := &TreeNode[T]{Value: val, Weight: weight}
 		ll.InsertSortedDescBasedOnNodeWeight(treeNode, weight)
 	}
 	return ll
@@ -58,7 +58,7 @@ func (ht *HuffmanTree[T]) buildTreeFromSortedList(ll list.List) {
 		if ll.Head() == nil {
 			done = true
 		}
-		treeNode := &TreeNode[T]{IgnoreValue: true, weight: combinedWeight, left: leftTree, right: rightTree}
+		treeNode := &TreeNode[T]{IgnoreValue: true, Weight: combinedWeight, left: leftTree, right: rightTree}
 		ll.InsertSortedDescBasedOnNodeWeight(treeNode, combinedWeight)
 	}
 
@@ -96,7 +96,7 @@ func (ht *HuffmanTree[T]) generateHuffmanCodes(current *TreeNode[T], currentCode
 func (ht *HuffmanTree[T]) recreateOriginalTreeFromHuffmanCodes(current *TreeNode[T], data T, bitSequence bit_sequence.BitSequence, currBitIdx uint64) {
 	isBitSet := bitSequence.GetBit(int(currBitIdx))
 	if currBitIdx == 0 {
-		leaf := &TreeNode[T]{Value: data, weight: int(bitSequence.GetXBytes(8))}
+		leaf := &TreeNode[T]{Value: data, Weight: int(bitSequence.GetXBytes(8))}
 		if !isBitSet && current.left == nil {
 			current.left = leaf
 		}
@@ -108,12 +108,12 @@ func (ht *HuffmanTree[T]) recreateOriginalTreeFromHuffmanCodes(current *TreeNode
 
 	if !isBitSet {
 		if current.left == nil {
-			current.left = &TreeNode[T]{IgnoreValue: true, weight: -1}
+			current.left = &TreeNode[T]{IgnoreValue: true, Weight: -1}
 		}
 		ht.recreateOriginalTreeFromHuffmanCodes(current.left, data, bitSequence, currBitIdx-1)
 	} else {
 		if current.right == nil {
-			current.right = &TreeNode[T]{IgnoreValue: true, weight: -1}
+			current.right = &TreeNode[T]{IgnoreValue: true, Weight: -1}
 		}
 		ht.recreateOriginalTreeFromHuffmanCodes(current.right, data, bitSequence, currBitIdx-1)
 	}

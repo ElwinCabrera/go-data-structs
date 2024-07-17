@@ -15,7 +15,7 @@ func NewSet() *Set {
 
 func (set *Set) Add(element any) {
 	if !set.Contains(element) {
-		set.list.InsertEnd(element)
+		set.list.InsertEnd(element, 0)
 	}
 }
 

@@ -9,7 +9,7 @@ import (
 func insertListRandomData(l list.List, size int) (list.List, []int) {
 	values := getArrayOfRandomNonNegativeUniqueValues(size)
 	for _, v := range values {
-		l.InsertEnd(v)
+		l.InsertEnd(v, 0)
 	}
 	return l, values
 }

@@ -10,9 +10,9 @@ func InitSinglyLinkedList() *SinglyLinkedList {
 	return &SinglyLinkedList{nil, 0}
 }
 
-func (sll *SinglyLinkedList) InsertEnd(v any) *Node {
+func (sll *SinglyLinkedList) InsertEnd(v any, weight int) *Node {
 	head := sll.head
-	new_node := &Node{Value: v}
+	new_node := &Node{Value: v, Weight: weight}
 	if head == nil {
 		sll.head = new_node
 	} else {
@@ -25,17 +25,17 @@ func (sll *SinglyLinkedList) InsertEnd(v any) *Node {
 	return new_node
 }
 
-func (sll *SinglyLinkedList) InsertFront(v any) *Node {
-	new_node := &Node{Value: v}
+func (sll *SinglyLinkedList) InsertFront(v any, weight int) *Node {
+	new_node := &Node{Value: v, Weight: weight}
 	new_node.next = sll.head
 	sll.head = new_node
 	sll.len++
 	return new_node
 }
 
-func (sll *SinglyLinkedList) InsertBefore(v any, n *Node) *Node {
+func (sll *SinglyLinkedList) InsertBefore(v any, weight int, n *Node) *Node {
 
-	new_node := &Node{Value: v}
+	new_node := &Node{Value: v, Weight: weight}
 	if sll.head == nil || n == nil {
 		if n == nil && sll.head != nil {
 			return nil
@@ -57,11 +57,11 @@ func (sll *SinglyLinkedList) InsertBefore(v any, n *Node) *Node {
 	return new_node
 }
 
-func (sll *SinglyLinkedList) InsertAfter(v any, n *Node) *Node {
+func (sll *SinglyLinkedList) InsertAfter(v any, weight int, n *Node) *Node {
 	if n == nil {
 		return nil
 	}
-	new_node := &Node{Value: v}
+	new_node := &Node{Value: v, Weight: weight}
 	hold := n.next
 	n.next = new_node
 	new_node.next = hold
@@ -101,16 +101,16 @@ func (sll *SinglyLinkedList) InsertSortedDescBasedOnNodeWeight(value any, weight
 	nodeInserted := false
 	var res *Node
 	if curr == nil {
-		res = sll.InsertEnd(value)
+		res = sll.InsertEnd(value, weight)
 	} else if weight <= curr.Weight {
 		//insert front
-		res = sll.InsertFront(value)
+		res = sll.InsertFront(value, weight)
 	} else {
 
 		for curr.next != nil {
 			if weight <= curr.next.Weight {
 				//insert before head.next
-				res = sll.InsertBefore(value, curr.next)
+				res = sll.InsertBefore(value, weight, curr.next)
 				nodeInserted = true
 				break
 			}
@@ -119,7 +119,38 @@ func (sll *SinglyLinkedList) InsertSortedDescBasedOnNodeWeight(value any, weight
 		}
 		if !nodeInserted && curr.next == nil {
 			//basically ll.InsertEnd(value) since we know where the list ends just do it in-place
-			res = sll.InsertAfter(value, curr)
+			res = sll.InsertAfter(value, weight, curr)
+
+		}
+	}
+	return res
+}
+
+func (sll *SinglyLinkedList) InsertSortedAscBasedOnNodeWeight(value any, weight int) *Node {
+
+	curr := sll.head
+	nodeInserted := false
+	var res *Node
+	if curr == nil {
+		res = sll.InsertEnd(value, weight)
+	} else if weight >= curr.Weight {
+		//insert front
+		res = sll.InsertFront(value, weight)
+	} else {
+
+		for curr.next != nil {
+			if weight >= curr.Weight && weight < curr.next.Weight {
+				//insert before head.next
+				res = sll.InsertBefore(value, weight, curr.next)
+				nodeInserted = true
+				break
+			}
+
+			curr = curr.next
+		}
+		if !nodeInserted && curr.next == nil {
+			//basically ll.InsertEnd(value) since we know where the list ends just do it in-place
+			res = sll.InsertAfter(value, weight, curr)
 
 		}
 	}

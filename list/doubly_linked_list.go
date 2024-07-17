@@ -10,9 +10,9 @@ func InitDoublyLinkedList() *DoublyLinkedList {
 	return &DoublyLinkedList{nil, 0}
 }
 
-func (dll *DoublyLinkedList) InsertEnd(v any) *Node {
+func (dll *DoublyLinkedList) InsertEnd(v any, weight int) *Node {
 	head := dll.head
-	new_node := &Node{Value: v}
+	new_node := &Node{Value: v, Weight: weight}
 	if head == nil {
 		dll.head = new_node
 	} else {
@@ -26,8 +26,8 @@ func (dll *DoublyLinkedList) InsertEnd(v any) *Node {
 	return new_node
 }
 
-func (dll *DoublyLinkedList) InsertFront(v any) *Node {
-	new_node := &Node{Value: v}
+func (dll *DoublyLinkedList) InsertFront(v any, weight int) *Node {
+	new_node := &Node{Value: v, Weight: weight}
 	if dll.head == nil {
 		dll.head = new_node
 	} else {
@@ -39,9 +39,9 @@ func (dll *DoublyLinkedList) InsertFront(v any) *Node {
 	return new_node
 }
 
-func (dll *DoublyLinkedList) InsertBefore(v any, n *Node) *Node {
+func (dll *DoublyLinkedList) InsertBefore(v any, weight int, n *Node) *Node {
 
-	new_node := &Node{Value: v}
+	new_node := &Node{Value: v, Weight: weight}
 	if dll.head == nil || n == nil {
 		if n == nil && dll.head != nil {
 			return nil
@@ -62,9 +62,9 @@ func (dll *DoublyLinkedList) InsertBefore(v any, n *Node) *Node {
 	return new_node
 }
 
-func (dll *DoublyLinkedList) InsertAfter(v any, n *Node) *Node {
+func (dll *DoublyLinkedList) InsertAfter(v any, weight int, n *Node) *Node {
 
-	new_node := &Node{Value: v}
+	new_node := &Node{Value: v, Weight: weight}
 
 	if dll.head == nil || n == nil {
 		if n == nil && dll.head != nil {
@@ -91,16 +91,16 @@ func (dll *DoublyLinkedList) InsertSortedDescBasedOnNodeWeight(value any, weight
 	nodeInserted := false
 	var res *Node
 	if curr == nil {
-		res = dll.InsertEnd(value)
-	} else if weight <= curr.Weight {
+		res = dll.InsertEnd(value, weight)
+	} else if weight >= curr.Weight {
 		//insert front
-		res = dll.InsertFront(value)
+		res = dll.InsertFront(value, weight)
 	} else {
 
 		for curr.next != nil {
-			if weight <= curr.next.Weight {
+			if weight <= curr.Weight && weight > curr.next.Weight {
 				//insert before head.next
-				res = dll.InsertBefore(value, curr.next)
+				res = dll.InsertBefore(value, weight, curr.next)
 				nodeInserted = true
 				break
 			}
@@ -109,7 +109,38 @@ func (dll *DoublyLinkedList) InsertSortedDescBasedOnNodeWeight(value any, weight
 		}
 		if !nodeInserted && curr.next == nil {
 			//basically ll.InsertEnd(value) since we know where the list ends just do it in-place
-			res = dll.InsertAfter(value, curr)
+			res = dll.InsertAfter(value, weight, curr)
+
+		}
+	}
+	return res
+}
+
+func (dll *DoublyLinkedList) InsertSortedAscBasedOnNodeWeight(value any, weight int) *Node {
+
+	curr := dll.head
+	nodeInserted := false
+	var res *Node
+	if curr == nil {
+		res = dll.InsertEnd(value, weight)
+	} else if weight <= curr.Weight {
+		//insert front
+		res = dll.InsertFront(value, weight)
+	} else {
+
+		for curr.next != nil {
+			if weight >= curr.Weight && weight < curr.next.Weight {
+				//insert before head.next
+				res = dll.InsertBefore(value, weight, curr.next)
+				nodeInserted = true
+				break
+			}
+
+			curr = curr.next
+		}
+		if !nodeInserted && curr.next == nil {
+			//basically ll.InsertEnd(value) since we know where the list ends just do it in-place
+			res = dll.InsertAfter(value, weight, curr)
 
 		}
 	}
