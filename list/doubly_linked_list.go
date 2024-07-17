@@ -12,7 +12,7 @@ func InitDoublyLinkedList() *DoublyLinkedList {
 
 func (dll *DoublyLinkedList) InsertEnd(v any) *Node {
 	head := dll.head
-	new_node := &Node{v, nil, nil}
+	new_node := &Node{Value: v}
 	if head == nil {
 		dll.head = new_node
 	} else {
@@ -27,7 +27,7 @@ func (dll *DoublyLinkedList) InsertEnd(v any) *Node {
 }
 
 func (dll *DoublyLinkedList) InsertFront(v any) *Node {
-	new_node := &Node{v, nil, nil}
+	new_node := &Node{Value: v}
 	if dll.head == nil {
 		dll.head = new_node
 	} else {
@@ -41,7 +41,7 @@ func (dll *DoublyLinkedList) InsertFront(v any) *Node {
 
 func (dll *DoublyLinkedList) InsertBefore(v any, n *Node) *Node {
 
-	new_node := &Node{v, nil, nil}
+	new_node := &Node{Value: v}
 	if dll.head == nil || n == nil {
 		if n == nil && dll.head != nil {
 			return nil
@@ -64,7 +64,8 @@ func (dll *DoublyLinkedList) InsertBefore(v any, n *Node) *Node {
 
 func (dll *DoublyLinkedList) InsertAfter(v any, n *Node) *Node {
 
-	new_node := &Node{v, nil, nil}
+	new_node := &Node{Value: v}
+
 	if dll.head == nil || n == nil {
 		if n == nil && dll.head != nil {
 			return nil
@@ -82,6 +83,37 @@ func (dll *DoublyLinkedList) InsertAfter(v any, n *Node) *Node {
 
 	dll.len++
 	return new_node
+}
+
+func (dll *DoublyLinkedList) InsertSortedDescBasedOnNodeWeight(value any, weight int) *Node {
+
+	curr := dll.head
+	nodeInserted := false
+	var res *Node
+	if curr == nil {
+		res = dll.InsertEnd(value)
+	} else if weight <= curr.Weight {
+		//insert front
+		res = dll.InsertFront(value)
+	} else {
+
+		for curr.next != nil {
+			if weight <= curr.next.Weight {
+				//insert before head.next
+				res = dll.InsertBefore(value, curr.next)
+				nodeInserted = true
+				break
+			}
+
+			curr = curr.next
+		}
+		if !nodeInserted && curr.next == nil {
+			//basically ll.InsertEnd(value) since we know where the list ends just do it in-place
+			res = dll.InsertAfter(value, curr)
+
+		}
+	}
+	return res
 }
 
 func (dll *DoublyLinkedList) PopFront() *Node {
@@ -161,6 +193,31 @@ func (dll *DoublyLinkedList) Remove(n *Node) bool {
 	n = nil
 	dll.len--
 	return true
+
+}
+
+func (dll *DoublyLinkedList) Detach(n *Node) *Node {
+	if dll.head == nil || n == nil {
+		return nil // this is more of an error than anything else
+	}
+
+	if n == dll.head {
+		return dll.PopFront()
+	}
+
+	prev := n.prev
+	next := n.next
+	if prev != nil {
+		prev.next = next
+	}
+	if next != nil {
+		next.prev = prev
+	}
+	n.next = nil
+	n.prev = nil
+
+	dll.len--
+	return n
 
 }
 

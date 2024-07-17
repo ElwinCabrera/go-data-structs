@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"github.com/ElwinCabrera/go-containers/stack-queue-set"
+	"github.com/ElwinCabrera/go-data-structs/stack-queue-set"
 	"testing"
 )
 

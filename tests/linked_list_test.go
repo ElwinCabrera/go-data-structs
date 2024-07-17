@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/ElwinCabrera/go-containers/list"
+	"github.com/ElwinCabrera/go-data-structs/list"
 )
 
 func test_InsertEnd(t *testing.T, l list.List, size int) {

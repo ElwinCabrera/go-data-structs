@@ -2,7 +2,7 @@ package tests
 
 import (
 	"fmt"
-	"github.com/ElwinCabrera/go-containers/list"
+	"github.com/ElwinCabrera/go-data-structs/list"
 	"math/rand"
 )
 

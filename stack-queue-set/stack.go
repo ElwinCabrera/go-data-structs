@@ -1,6 +1,6 @@
 package stack_queue_set
 
-import "github.com/ElwinCabrera/go-containers/list"
+import "github.com/ElwinCabrera/go-data-structs/list"
 
 type Stack struct {
 	list            list.List

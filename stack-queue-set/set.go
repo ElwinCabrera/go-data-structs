@@ -2,7 +2,7 @@ package stack_queue_set
 
 import (
 	"fmt"
-	"github.com/ElwinCabrera/go-containers/list"
+	"github.com/ElwinCabrera/go-data-structs/list"
 )
 
 type Set struct {

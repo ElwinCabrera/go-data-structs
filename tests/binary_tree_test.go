@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"github.com/ElwinCabrera/go-containers/trees"
+	"github.com/ElwinCabrera/go-data-structs/trees"
 	"testing"
 )
 

@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/ElwinCabrera/go-containers/trees"
+	"github.com/ElwinCabrera/go-data-structs/trees"
 )
 
 func treeTestInsertHelper[T trees.TreeNodeValue](t *testing.T, btree trees.Tree[T], insertValues *[]T) []*trees.TreeNode[T] {

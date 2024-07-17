@@ -12,7 +12,7 @@ func InitSinglyLinkedList() *SinglyLinkedList {
 
 func (sll *SinglyLinkedList) InsertEnd(v any) *Node {
 	head := sll.head
-	new_node := &Node{v, nil, nil}
+	new_node := &Node{Value: v}
 	if head == nil {
 		sll.head = new_node
 	} else {
@@ -26,7 +26,7 @@ func (sll *SinglyLinkedList) InsertEnd(v any) *Node {
 }
 
 func (sll *SinglyLinkedList) InsertFront(v any) *Node {
-	new_node := &Node{v, nil, nil}
+	new_node := &Node{Value: v}
 	new_node.next = sll.head
 	sll.head = new_node
 	sll.len++
@@ -35,7 +35,7 @@ func (sll *SinglyLinkedList) InsertFront(v any) *Node {
 
 func (sll *SinglyLinkedList) InsertBefore(v any, n *Node) *Node {
 
-	new_node := &Node{v, nil, nil}
+	new_node := &Node{Value: v}
 	if sll.head == nil || n == nil {
 		if n == nil && sll.head != nil {
 			return nil
@@ -61,7 +61,7 @@ func (sll *SinglyLinkedList) InsertAfter(v any, n *Node) *Node {
 	if n == nil {
 		return nil
 	}
-	new_node := &Node{v, nil, nil}
+	new_node := &Node{Value: v}
 	hold := n.next
 	n.next = new_node
 	new_node.next = hold
@@ -93,6 +93,37 @@ func (sll *SinglyLinkedList) PopBack() *Node {
 	sll.len--
 	return popped_node
 
+}
+
+func (sll *SinglyLinkedList) InsertSortedDescBasedOnNodeWeight(value any, weight int) *Node {
+
+	curr := sll.head
+	nodeInserted := false
+	var res *Node
+	if curr == nil {
+		res = sll.InsertEnd(value)
+	} else if weight <= curr.Weight {
+		//insert front
+		res = sll.InsertFront(value)
+	} else {
+
+		for curr.next != nil {
+			if weight <= curr.next.Weight {
+				//insert before head.next
+				res = sll.InsertBefore(value, curr.next)
+				nodeInserted = true
+				break
+			}
+
+			curr = curr.next
+		}
+		if !nodeInserted && curr.next == nil {
+			//basically ll.InsertEnd(value) since we know where the list ends just do it in-place
+			res = sll.InsertAfter(value, curr)
+
+		}
+	}
+	return res
 }
 
 func (sll *SinglyLinkedList) Find(v any) []*Node {
