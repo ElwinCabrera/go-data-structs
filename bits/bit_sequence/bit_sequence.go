@@ -48,6 +48,7 @@ func (bseq BitSequence) SetBitsFromNum(startBitIdx int, number uint64) {
 	for number != 0 && startBitIdx < bseq.numBits {
 		bseq.SetBit(startBitIdx, utils.NumToBool(uint8(number&0x1)))
 		number >>= 1
+		startBitIdx++
 	}
 }
 
@@ -166,4 +167,16 @@ func (bseq BitSequence) Clear() {
 	for i, _ := range *bseq.data {
 		(*bseq.data)[i] = 0
 	}
+}
+
+func (bseq BitSequence) String() string {
+	result := ""
+
+	//for i :=  0; i < bseq.bytesAllocated; i++ {
+	//	result += fmt.Sprintf("%02X", (*bseq.data)[i])
+	//}
+	for i := bseq.numBits - 1; i >= 0; i-- {
+		result += fmt.Sprintf("%v", utils.BoolToInt(bseq.GetBit(i)))
+	}
+	return result
 }

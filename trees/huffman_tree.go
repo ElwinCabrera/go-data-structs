@@ -13,8 +13,8 @@ type HuffmanTree[T comparable] struct {
 
 func NewHuffmanTreeFromFrequencyMap[T comparable](frequencyMap map[T]int) *HuffmanTree[T] {
 	ht := &HuffmanTree[T]{frequencyMap: frequencyMap}
-	ll := ht.getSortedListFromFrequencyMap()
-	ht.buildTreeFromSortedList(ll)
+	pq := ht.getSortedListFromFrequencyMap()
+	ht.buildTreeFromSortedList(pq)
 	return ht
 }
 
@@ -28,9 +28,9 @@ func NewHuffmanTreeFromHuffmanCodes[T comparable](huffmanCodes map[T]bit_sequenc
 	return ht
 }
 
-func (ht *HuffmanTree[T]) getSortedListFromFrequencyMap() stack_queue_set.PriorityQueue {
+func (ht *HuffmanTree[T]) getSortedListFromFrequencyMap() *stack_queue_set.PriorityQueue {
 	//ll := list.InitDoublyLinkedList()
-	priorityQ := stack_queue_set.NewPriorityQueue(false)
+	priorityQ := stack_queue_set.NewPriorityQueue(true)
 	for val, weight := range ht.frequencyMap {
 		treeNode := &TreeNode[T]{Value: val, Weight: weight}
 		//ll.InsertSortedDescBasedOnNodeWeight(treeNode, weight)
@@ -39,12 +39,12 @@ func (ht *HuffmanTree[T]) getSortedListFromFrequencyMap() stack_queue_set.Priori
 	return priorityQ
 }
 
-func (ht *HuffmanTree[T]) buildTreeFromSortedList(ll stack_queue_set.PriorityQueue) {
+func (ht *HuffmanTree[T]) buildTreeFromSortedList(pq *stack_queue_set.PriorityQueue) {
 
 	done := false
 	for !done {
-		leftTree := ll.Dequeue().(*TreeNode[T])
-		rightTree := ll.Dequeue().(*TreeNode[T])
+		leftTree := pq.Dequeue().(*TreeNode[T])
+		rightTree := pq.Dequeue().(*TreeNode[T])
 
 		combinedWeight := 0
 		if leftTree != nil {
@@ -53,19 +53,20 @@ func (ht *HuffmanTree[T]) buildTreeFromSortedList(ll stack_queue_set.PriorityQue
 		if rightTree != nil {
 			combinedWeight += rightTree.Weight
 		}
-		if ll.IsEmpty() {
+		if pq.IsEmpty() {
 			done = true
 		}
 
 		treeNode := &TreeNode[T]{IgnoreValue: true, Weight: combinedWeight, left: leftTree, right: rightTree}
-		ll.Push(treeNode, combinedWeight)
+		pq.Push(treeNode, combinedWeight)
 	}
 
-	ht.root = ll.PopFront().Value.(*TreeNode[T])
+	ht.root = pq.Dequeue().(*TreeNode[T])
 }
 
 func (ht *HuffmanTree[T]) GetHuffmanCodes() map[T]bit_sequence.BitSequence {
 	if ht.huffmanCodes == nil {
+		ht.huffmanCodes = make(map[T]bit_sequence.BitSequence)
 		ht.generateHuffmanCodes(ht.root, 0, 0, false)
 	}
 
@@ -81,13 +82,16 @@ func (ht *HuffmanTree[T]) generateHuffmanCodes(current *TreeNode[T], currentCode
 		currentCode |= 1
 	}
 
-	if _, ok := ht.huffmanCodes[current.Value]; !ok {
-		if !current.IgnoreValue {
-			bs := bit_sequence.NewBitSequence(depth)
-			bs.SetBitsFromNum(0, uint64(currentCode))
-			ht.huffmanCodes[current.Value] = bs
-		}
+	if _, ok := ht.huffmanCodes[current.Value]; ok {
+		panic("We visited same data node twice")
 	}
+
+	if !current.IgnoreValue {
+		bs := bit_sequence.NewBitSequence(depth)
+		bs.SetBitsFromNum(0, uint64(currentCode))
+		ht.huffmanCodes[current.Value] = bs
+	}
+
 	ht.generateHuffmanCodes(current.left, currentCode, depth+1, false)
 	ht.generateHuffmanCodes(current.right, currentCode, depth+1, true)
 }
