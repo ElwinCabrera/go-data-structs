@@ -1,6 +1,7 @@
 package trees
 
 import (
+	"fmt"
 	"github.com/ElwinCabrera/go-data-structs/bits/bit_sequence"
 	stack_queue_set "github.com/ElwinCabrera/go-data-structs/stack-queue-set"
 )
@@ -69,7 +70,6 @@ func (ht *HuffmanTree[T]) GetHuffmanCodes() map[T]bit_sequence.BitSequence {
 		ht.huffmanCodes = make(map[T]bit_sequence.BitSequence)
 		ht.generateHuffmanCodes(ht.root, 0, 0, false)
 	}
-
 	return ht.huffmanCodes
 }
 
@@ -165,4 +165,24 @@ func (ht *HuffmanTree[T]) findDataLenFromBitSequence(current *TreeNode[T], count
 		count = ht.findDataLenFromBitSequence(current.right, count, bitSequence)
 	}
 	return count
+}
+
+func (ht *HuffmanTree[T]) InOrderNodes() []*TreeNode[T] {
+	var result []*TreeNode[T]
+	treeInOrderValueHelper(ht.root, &result)
+	return result
+}
+
+func (ht *HuffmanTree[T]) String() string {
+	nodes := ht.InOrderNodes()
+	res := "["
+	for _, node := range nodes {
+		if node.IgnoreValue {
+			res += fmt.Sprintf("(Val: PlaceHoller, Weight: %v) ", node.Weight)
+		} else {
+			res += fmt.Sprintf("(Val: %v, Weight: %v) ", node.Value, node.Weight)
+		}
+	}
+	res += "]"
+	return res
 }

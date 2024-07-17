@@ -263,7 +263,7 @@ func treeClearHelper[T any](current *TreeNode[T]) {
 
 }
 
-func treePreOrderValueHelper[T TreeNodeValue](current *TreeNode[T], nodes *[]*TreeNode[T]) {
+func treePreOrderValueHelper[T any](current *TreeNode[T], nodes *[]*TreeNode[T]) {
 	if current == nil {
 		return
 	}
@@ -272,7 +272,7 @@ func treePreOrderValueHelper[T TreeNodeValue](current *TreeNode[T], nodes *[]*Tr
 	treePreOrderValueHelper(current.right, nodes)
 }
 
-func treeInOrderValueHelper[T TreeNodeValue](current *TreeNode[T], nodes *[]*TreeNode[T]) {
+func treeInOrderValueHelper[T any](current *TreeNode[T], nodes *[]*TreeNode[T]) {
 	if current == nil {
 		return
 	}
@@ -281,7 +281,7 @@ func treeInOrderValueHelper[T TreeNodeValue](current *TreeNode[T], nodes *[]*Tre
 	treeInOrderValueHelper(current.right, nodes)
 }
 
-func treePostOrderValueHelper[T TreeNodeValue](current *TreeNode[T], nodes *[]*TreeNode[T]) {
+func treePostOrderValueHelper[T any](current *TreeNode[T], nodes *[]*TreeNode[T]) {
 	if current == nil {
 		return
 	}
