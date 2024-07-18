@@ -122,29 +122,35 @@ func (bseq BitSequence) GetXBytes(numBytes int) uint64 {
 }
 
 func (bseq BitSequence) GetNextBitStart(bitIdx int) {
-	if bitIdx < 0 {
-		fmt.Printf("BitSequence.getNextBitStart: idx out of bounds\n")
-		bitIdx = 0
-	}
-	if bitIdx >= bseq.numBits {
-		fmt.Printf("BitSequence.getNextBitStart: idx out of bounds\n")
-		bitIdx = bseq.numBits - 1
+	if bitIdx < 0 || bitIdx >= bseq.numBits {
+		panic("BitSequence.getNextBitStart: idx out of bounds\n")
 	}
 	*bseq.nextBitIdx = bitIdx
 }
 
 func (bseq BitSequence) GetNextBit() bool {
 	if *bseq.nextBitIdx == -1 {
-		panic("BitSequence.getNextBit() never called")
+		panic("BitSequence.getNextBitStart() never called")
+	}
+	if *bseq.nextBitIdx >= bseq.numBits {
+		panic("BitSequence.GetNextBit() called one too many times. Index Out of bounds")
 	}
 	res := bseq.GetBit(*bseq.nextBitIdx)
 	*bseq.nextBitIdx++
 	return res
 }
 
-//func (bseq BitSequence) GetNextByte() uint8 {
-//	return 0
-//}
+func (bseq BitSequence) GetNextByte() uint8 {
+	if *bseq.nextByteIdx == -1 {
+		panic("BitSequence.getNextByteStart() never called")
+	}
+	if *bseq.nextByteIdx >= bseq.bytesAllocated {
+		panic("BitSequence.getNextByte() called one too many times. Index Out of bounds")
+	}
+	res := bseq.GetByte(*bseq.nextByteIdx)
+	*bseq.nextByteIdx++
+	return res
+}
 
 func (bseq BitSequence) GetBitSeq() []uint8 {
 	return *bseq.data
