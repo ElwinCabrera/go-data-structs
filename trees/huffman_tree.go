@@ -124,13 +124,13 @@ func (ht *HuffmanTree[T]) recreateOriginalTreeFromHuffmanCodes(current *TreeNode
 
 }
 
-func (ht *HuffmanTree[T]) decodeHuffmanCode(bitSequence bitstructs.BitSequence) *[]T {
+func (ht *HuffmanTree[T]) DecodeBitSequence(bitSequence *bitstructs.BitSequence) *[]T {
 	//bitSequence.GetNextBitStart(0)
 	//dataLen := ht.findDataLenFromBitSequence(ht.root, 0, bitSequence)
 
 	var data *[]T
 	bitSequence.GetNextBitStart(0)
-	ht.decodeHuffmanCodeHelper(ht.root, data, &bitSequence)
+	ht.decodeHuffmanCodeHelper(ht.root, data, bitSequence)
 	return data
 }
 
