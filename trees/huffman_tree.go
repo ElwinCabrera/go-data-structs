@@ -83,11 +83,11 @@ func (ht *HuffmanTree[T]) generateHuffmanCodes(current *TreeNode[T], currentCode
 		currentCode |= 1
 	}
 
-	if _, ok := ht.huffmanCodes[current.Value]; ok {
-		panic("We visited same data node twice")
-	}
-
 	if !current.IgnoreValue {
+		if _, ok := ht.huffmanCodes[current.Value]; ok {
+			panic(fmt.Sprintf("We visited same data node twice. current code: %v, node value: %v", currentCode, current.Value))
+		}
+
 		bs := bitstructs.NewBitSequence(depth)
 		bs.SetBitsFromNum(0, uint64(currentCode))
 		ht.huffmanCodes[current.Value] = bs
@@ -135,12 +135,15 @@ func (ht *HuffmanTree[T]) DecodeBitSequence(bitSequence *bitstructs.BitSequence)
 }
 
 func (ht *HuffmanTree[T]) decodeHuffmanCodeHelper(current *TreeNode[T], data *[]T, bitSequence *bitstructs.BitSequence) {
-	if current == nil || bitSequence.GetNextBitIdx() > bitSequence.GetNumBits() {
+	if current == nil {
 		return
 	}
 	if !current.IgnoreValue {
 		*data = append(*data, current.Value)
 		current = ht.root
+	}
+	if bitSequence.GetNextBitIdx() >= bitSequence.GetNumBits() {
+		return
 	}
 	isBitSet := bitSequence.GetNextBit()
 	if !isBitSet {
