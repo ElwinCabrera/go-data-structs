@@ -1,9 +1,10 @@
-package bit_sequence
+package bitstructs
 
 import (
 	"fmt"
-	utils "github.com/ElwinCabrera/go-data-structs/bits"
 )
+
+var BYTE_LENGTH int = 8
 
 type BitSequence struct {
 	data           *[]uint8
@@ -15,8 +16,8 @@ type BitSequence struct {
 
 func NewBitSequence(numBits int) BitSequence {
 
-	bytesAllocated := numBits / utils.BYTE_LENGTH
-	if numBits%utils.BYTE_LENGTH != 0 { // if there is a remainder we need to allocate an extra byte to accommodate the extra number of bits
+	bytesAllocated := numBits / BYTE_LENGTH
+	if numBits%BYTE_LENGTH != 0 { // if there is a remainder we need to allocate an extra byte to accommodate the extra number of bit-structs
 		bytesAllocated += 1
 	}
 
@@ -26,12 +27,23 @@ func NewBitSequence(numBits int) BitSequence {
 	return BitSequence{data: &data, numBits: numBits, bytesAllocated: bytesAllocated, nextBitIdx: &nextBitIdx, nextByteIdx: &nextByteIdx}
 }
 
+func NewBitSequenceFromByteArray(data *[]uint8, bitLen int) BitSequence {
+
+	bitSeq := NewBitSequence(bitLen)
+
+	bitSeq.SetNextByteStart(0)
+	for i := 0; i < len(*data); i++ {
+		bitSeq.SetNextByte((*data)[i])
+	}
+	return bitSeq
+}
+
 func (bseq BitSequence) SetBit(bitIdx int, set bool) {
 	if bitIdx < 0 || bitIdx >= bseq.numBits {
 		panic("set_bit idx out of bounds")
 	}
-	byteIdx := bitIdx / utils.BYTE_LENGTH
-	bitIdxInByte := bitIdx % utils.BYTE_LENGTH
+	byteIdx := bitIdx / BYTE_LENGTH
+	bitIdxInByte := bitIdx % BYTE_LENGTH
 
 	if set {
 		(*bseq.data)[byteIdx] |= 1 << bitIdxInByte
@@ -46,7 +58,7 @@ func (bseq BitSequence) SetBitsFromNum(startBitIdx int, number uint64) {
 		panic("BitSequence.setBitsFromNum(..): idx out of bounds")
 	}
 	for number != 0 && startBitIdx < bseq.numBits {
-		bseq.SetBit(startBitIdx, utils.NumToBool(uint8(number&0x1)))
+		bseq.SetBit(startBitIdx, numToBool(uint8(number&0x1)))
 		number >>= 1
 		startBitIdx++
 	}
@@ -89,12 +101,12 @@ func (bseq BitSequence) GetBit(bitIdx int) bool {
 		panic("BitSequence.getBit() idx out of bounds")
 		//return false
 	}
-	byteIdx := bitIdx / utils.BYTE_LENGTH
-	bitIdxInByte := bitIdx % utils.BYTE_LENGTH
+	byteIdx := bitIdx / BYTE_LENGTH
+	bitIdxInByte := bitIdx % BYTE_LENGTH
 
 	zeroOrOne := ((*bseq.data)[byteIdx] >> bitIdxInByte) & 0x1
 
-	return utils.NumToBool(zeroOrOne)
+	return numToBool(zeroOrOne)
 
 }
 
@@ -114,7 +126,7 @@ func (bseq BitSequence) GetXBytes(numBytes int) uint64 {
 	res := uint64(0)
 
 	for numBytes != 0 {
-		res <<= utils.BYTE_LENGTH
+		res <<= BYTE_LENGTH
 		res |= uint64(bseq.GetByte(numBytes - 1))
 		numBytes--
 	}
@@ -182,7 +194,21 @@ func (bseq BitSequence) String() string {
 	//	result += fmt.Sprintf("%02X", (*bseq.data)[i])
 	//}
 	for i := bseq.numBits - 1; i >= 0; i-- {
-		result += fmt.Sprintf("%v", utils.BoolToInt(bseq.GetBit(i)))
+		result += fmt.Sprintf("%v", boolToInt(bseq.GetBit(i)))
 	}
 	return result
+}
+
+func numToBool(n uint8) bool {
+	if n == 0 {
+		return false
+	}
+	return true
+}
+
+func boolToInt(b bool) int {
+	if b {
+		return 1
+	}
+	return 0
 }

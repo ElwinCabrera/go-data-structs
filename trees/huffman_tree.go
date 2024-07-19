@@ -2,14 +2,15 @@ package trees
 
 import (
 	"fmt"
-	"github.com/ElwinCabrera/go-data-structs/bits/bit_sequence"
+	bitstructs "github.com/ElwinCabrera/go-data-structs/bit-structs"
 	stack_queue_set "github.com/ElwinCabrera/go-data-structs/stack-queue-set"
 )
 
 type HuffmanTree[T comparable] struct {
 	root         *TreeNode[T]
 	frequencyMap map[T]int
-	huffmanCodes map[T]bit_sequence.BitSequence
+
+	huffmanCodes map[T]bitstructs.BitSequence
 }
 
 func NewHuffmanTreeFromFrequencyMap[T comparable](frequencyMap map[T]int) *HuffmanTree[T] {
@@ -19,7 +20,7 @@ func NewHuffmanTreeFromFrequencyMap[T comparable](frequencyMap map[T]int) *Huffm
 	return ht
 }
 
-func NewHuffmanTreeFromHuffmanCodes[T comparable](huffmanCodes map[T]bit_sequence.BitSequence) *HuffmanTree[T] {
+func NewHuffmanTreeFromHuffmanCodes[T comparable](huffmanCodes map[T]bitstructs.BitSequence) *HuffmanTree[T] {
 	root := &TreeNode[T]{IgnoreValue: true, Weight: -1}
 	ht := &HuffmanTree[T]{root: root, huffmanCodes: huffmanCodes}
 
@@ -65,9 +66,9 @@ func (ht *HuffmanTree[T]) buildTreeFromSortedList(pq *stack_queue_set.PriorityQu
 	ht.root = pq.Dequeue().(*TreeNode[T])
 }
 
-func (ht *HuffmanTree[T]) GetHuffmanCodes() map[T]bit_sequence.BitSequence {
+func (ht *HuffmanTree[T]) GetHuffmanCodes() map[T]bitstructs.BitSequence {
 	if ht.huffmanCodes == nil {
-		ht.huffmanCodes = make(map[T]bit_sequence.BitSequence)
+		ht.huffmanCodes = make(map[T]bitstructs.BitSequence)
 		ht.generateHuffmanCodes(ht.root, 0, 0, false)
 	}
 	return ht.huffmanCodes
@@ -87,7 +88,7 @@ func (ht *HuffmanTree[T]) generateHuffmanCodes(current *TreeNode[T], currentCode
 	}
 
 	if !current.IgnoreValue {
-		bs := bit_sequence.NewBitSequence(depth)
+		bs := bitstructs.NewBitSequence(depth)
 		bs.SetBitsFromNum(0, uint64(currentCode))
 		ht.huffmanCodes[current.Value] = bs
 	}
@@ -96,7 +97,7 @@ func (ht *HuffmanTree[T]) generateHuffmanCodes(current *TreeNode[T], currentCode
 	ht.generateHuffmanCodes(current.right, currentCode, depth+1, true)
 }
 
-func (ht *HuffmanTree[T]) recreateOriginalTreeFromHuffmanCodes(current *TreeNode[T], data T, bitSequence bit_sequence.BitSequence, currBitIdx uint64) {
+func (ht *HuffmanTree[T]) recreateOriginalTreeFromHuffmanCodes(current *TreeNode[T], data T, bitSequence bitstructs.BitSequence, currBitIdx uint64) {
 	isBitSet := bitSequence.GetBit(int(currBitIdx))
 	if currBitIdx == 0 {
 		leaf := &TreeNode[T]{Value: data, Weight: int(bitSequence.GetXBytes(8))}
@@ -123,7 +124,7 @@ func (ht *HuffmanTree[T]) recreateOriginalTreeFromHuffmanCodes(current *TreeNode
 
 }
 
-func (ht *HuffmanTree[T]) decodeHuffmanCode(bitSequence bit_sequence.BitSequence) *[]T {
+func (ht *HuffmanTree[T]) decodeHuffmanCode(bitSequence bitstructs.BitSequence) *[]T {
 	//bitSequence.GetNextBitStart(0)
 	//dataLen := ht.findDataLenFromBitSequence(ht.root, 0, bitSequence)
 
@@ -133,7 +134,7 @@ func (ht *HuffmanTree[T]) decodeHuffmanCode(bitSequence bit_sequence.BitSequence
 	return data
 }
 
-func (ht *HuffmanTree[T]) decodeHuffmanCodeHelper(current *TreeNode[T], data *[]T, bitSequence *bit_sequence.BitSequence) {
+func (ht *HuffmanTree[T]) decodeHuffmanCodeHelper(current *TreeNode[T], data *[]T, bitSequence *bitstructs.BitSequence) {
 	if current == nil || bitSequence.GetNextBitIdx() > bitSequence.GetNumBits() {
 		return
 	}
@@ -150,7 +151,7 @@ func (ht *HuffmanTree[T]) decodeHuffmanCodeHelper(current *TreeNode[T], data *[]
 
 }
 
-func (ht *HuffmanTree[T]) findDataLenFromBitSequence(current *TreeNode[T], count int, bitSequence *bit_sequence.BitSequence) int {
+func (ht *HuffmanTree[T]) findDataLenFromBitSequence(current *TreeNode[T], count int, bitSequence *bitstructs.BitSequence) int {
 	if current == nil || bitSequence.GetNextBitIdx() > bitSequence.GetNumBits() {
 		return count
 	}
@@ -178,7 +179,7 @@ func (ht *HuffmanTree[T]) String() string {
 	res := "["
 	for _, node := range nodes {
 		if node.IgnoreValue {
-			res += fmt.Sprintf("(Val: PlaceHoller, Weight: %v) ", node.Weight)
+			res += fmt.Sprintf("(Val: PlaceHolder, Weight: %v) ", node.Weight)
 		} else {
 			res += fmt.Sprintf("(Val: %v, Weight: %v) ", node.Value, node.Weight)
 		}

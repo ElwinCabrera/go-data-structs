@@ -5,23 +5,10 @@ import (
 	"unicode"
 )
 
-var BYTE_LENGTH int = 8
-
-func NumToBool(n uint8) bool {
-	if n == 0 {
-		return false
+func NumToHexString(num uint) string {
+	if num == 0 {
+		return "0"
 	}
-	return true
-}
-
-func BoolToInt(b bool) int {
-	if b {
-		return 1
-	}
-	return 0
-}
-
-func NumToHexString(num int) string {
 	hex := ""
 	for num > 0 {
 		remainder := uint8(num % 16)

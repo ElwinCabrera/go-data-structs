@@ -11,7 +11,7 @@ type Stack struct {
 }
 
 func InitStack() *Stack {
-	return &Stack{list.InitDoublyLinkedList(), 0}
+	return &Stack{list.NewDoublyLinkedList(), 0}
 }
 
 func (stack *Stack) Push(value any) {
@@ -47,7 +47,7 @@ func (stack *Stack) Clear() {
 
 func (stack *Stack) Values() []any {
 	var values []any
-	it := list.InitListIterator(stack.list)
+	it := list.NewListIterator(stack.list)
 	for ; it.Get() != nil; it = it.Next() {
 		values = append(values, it.Get().Value)
 	}

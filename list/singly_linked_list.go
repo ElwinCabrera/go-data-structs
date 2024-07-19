@@ -6,7 +6,7 @@ import (
 
 type SinglyLinkedList LinkedList
 
-func InitSinglyLinkedList() *SinglyLinkedList {
+func NewSinglyLinkedList() *SinglyLinkedList {
 	return &SinglyLinkedList{nil, 0}
 }
 
@@ -102,13 +102,13 @@ func (sll *SinglyLinkedList) InsertSortedDescBasedOnNodeWeight(value any, weight
 	var res *Node
 	if curr == nil {
 		res = sll.InsertEnd(value, weight)
-	} else if weight <= curr.Weight {
+	} else if weight >= curr.Weight {
 		//insert front
 		res = sll.InsertFront(value, weight)
 	} else {
 
 		for curr.next != nil {
-			if weight <= curr.next.Weight {
+			if weight <= curr.Weight && weight > curr.next.Weight {
 				//insert before head.next
 				res = sll.InsertBefore(value, weight, curr.next)
 				nodeInserted = true
@@ -133,7 +133,7 @@ func (sll *SinglyLinkedList) InsertSortedAscBasedOnNodeWeight(value any, weight 
 	var res *Node
 	if curr == nil {
 		res = sll.InsertEnd(value, weight)
-	} else if weight >= curr.Weight {
+	} else if weight <= curr.Weight {
 		//insert front
 		res = sll.InsertFront(value, weight)
 	} else {

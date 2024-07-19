@@ -1,6 +1,6 @@
 package list
 
-type ListComparableTypes interface {
+type ComparableTypes interface {
 	~int | ~float32 | ~float64 | ~string
 }
 

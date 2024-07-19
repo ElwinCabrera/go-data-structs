@@ -5,7 +5,7 @@ type ListIterator struct {
 	current *Node
 }
 
-func InitListIterator(l List) *ListIterator {
+func NewListIterator(l List) *ListIterator {
 	return &ListIterator{l, l.Head()}
 }
 

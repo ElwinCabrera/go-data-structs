@@ -11,7 +11,7 @@ type Queue struct {
 }
 
 func InitQueue() *Queue {
-	return &Queue{list.InitDoublyLinkedList(), 0}
+	return &Queue{list.NewDoublyLinkedList(), 0}
 }
 
 func (queue *Queue) Push(value any) {
@@ -51,7 +51,7 @@ func (queue *Queue) Back() any {
 
 func (queue *Queue) Values() []any {
 	var values []any
-	it := list.InitListIterator(queue.list)
+	it := list.NewListIterator(queue.list)
 	for ; it.Get() != nil; it = it.Next() {
 		values = append(values, it.Get().Value)
 	}

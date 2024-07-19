@@ -48,7 +48,7 @@ func test_InsertSorted(t *testing.T, l list.List, size int) {
 	for i := 0; i < size; i++ {
 		l.InsertSortedAscBasedOnNodeWeight(insert_values[i], insert_weights[i])
 	}
-	it := list.InitListIterator(l)
+	it := list.NewListIterator(l)
 	idx := 0
 	for it = it.Begin(); it.Get() != nil; it = it.Next() {
 		if it.Get().Weight != idx {
@@ -64,7 +64,7 @@ func test_InsertSorted(t *testing.T, l list.List, size int) {
 	for i := 0; i < size; i++ {
 		l.InsertSortedDescBasedOnNodeWeight(insert_values[i], insert_weights[i])
 	}
-	it = list.InitListIterator(l)
+	it = list.NewListIterator(l)
 	idx = size - 1
 	for it = it.Begin(); it.Get() != nil; it = it.Next() {
 		if it.Get().Weight != idx {
@@ -97,7 +97,7 @@ func test_InsertBefore(t *testing.T, l list.List, size int) {
 	}
 
 	i := 0
-	it := list.InitListIterator(l)
+	it := list.NewListIterator(l)
 	for it := it.Begin(); it.Get() != nil; it = it.Next() {
 		new_val := (i + 1) * -1
 		l.InsertBefore(new_val, 0, it.Get())
@@ -119,7 +119,7 @@ func test_InsertAfter(t *testing.T, l list.List, size int) {
 	}
 
 	i := 0
-	it := list.InitListIterator(l)
+	it := list.NewListIterator(l)
 	for it := it.Begin(); it.Get() != nil; it = it.Next().Next() {
 		new_val := (i + 1) * -1
 		l.InsertAfter(new_val, 0, it.Get())
@@ -257,7 +257,7 @@ func test_Find(t *testing.T, l list.List, size int) {
 
 }
 func Test_SinglyLinkedList(t *testing.T) {
-	ll := list.InitSinglyLinkedList()
+	ll := list.NewSinglyLinkedList()
 	size := 10
 	test_InsertEnd(t, ll, size)
 	test_InsertFront(t, ll, size)
@@ -271,7 +271,7 @@ func Test_SinglyLinkedList(t *testing.T) {
 }
 
 func Test_DoublyLinkedList(t *testing.T) {
-	ll := list.InitDoublyLinkedList()
+	ll := list.NewDoublyLinkedList()
 	size := 10
 	test_InsertEnd(t, ll, size)
 	test_InsertFront(t, ll, size)

@@ -24,7 +24,7 @@ func removeRandomListNodes(l list.List, num_times int) bool {
 		return true
 	}
 
-	it := list.InitListIterator(l)
+	it := list.NewListIterator(l)
 
 	for it := it.Begin(); it.Get() != nil; it = it.Next() {
 		nodes = append(nodes, it.Get())
@@ -53,7 +53,7 @@ func removeRandomListNodes(l list.List, num_times int) bool {
 }
 
 func verifyListContents(l list.List, values []int) bool {
-	it := list.InitListIterator(l)
+	it := list.NewListIterator(l)
 	if len(values) != l.Len() {
 		return false
 	}
@@ -74,7 +74,7 @@ func isNodeInList(l list.List, node *list.Node) bool {
 	if node == nil {
 		return false
 	}
-	it := list.InitListIterator(l)
+	it := list.NewListIterator(l)
 	idx := 0
 	for it := it.Begin(); it.Get() != nil; it = it.Next() {
 		if it.Get() == node {

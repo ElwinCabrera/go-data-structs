@@ -11,7 +11,7 @@ type PriorityQueue struct {
 }
 
 func NewPriorityQueue(orderAsc bool) *PriorityQueue {
-	return &PriorityQueue{list.InitDoublyLinkedList(), orderAsc}
+	return &PriorityQueue{list.NewDoublyLinkedList(), orderAsc}
 }
 
 func (queue *PriorityQueue) Push(value any, priority int) {
@@ -53,7 +53,7 @@ func (queue *PriorityQueue) Back() any {
 	if queue.IsEmpty() {
 		return nil // more like an error but will leave as nil for now and will fix later
 	}
-	it := list.InitListIterator(queue.list).Begin()
+	it := list.NewListIterator(queue.list).Begin()
 
 	lastVal := it.Get().Value
 	for ; it.Get() != nil; it = it.Next() {
@@ -64,7 +64,7 @@ func (queue *PriorityQueue) Back() any {
 
 func (queue *PriorityQueue) Values() []any {
 	var values []any
-	it := list.InitListIterator(queue.list)
+	it := list.NewListIterator(queue.list)
 	for ; it.Get() != nil; it = it.Next() {
 		values = append(values, it.Get().Value)
 	}

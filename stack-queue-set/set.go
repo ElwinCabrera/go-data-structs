@@ -10,7 +10,7 @@ type Set struct {
 }
 
 func NewSet() *Set {
-	return &Set{list.InitDoublyLinkedList()}
+	return &Set{list.NewDoublyLinkedList()}
 }
 
 func (set *Set) Add(element any) {
@@ -53,7 +53,7 @@ func (set *Set) Clear() {
 
 func (set *Set) Values() []any {
 	var values []any
-	it := list.InitListIterator(set.list)
+	it := list.NewListIterator(set.list)
 	for it := it.Begin(); it.Get() != nil; it = it.Next() {
 		values = append(values, it.Get().Value)
 	}

@@ -6,7 +6,7 @@ import (
 
 type DoublyLinkedList LinkedList
 
-func InitDoublyLinkedList() *DoublyLinkedList {
+func NewDoublyLinkedList() *DoublyLinkedList {
 	return &DoublyLinkedList{nil, 0}
 }
 
