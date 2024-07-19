@@ -128,7 +128,7 @@ func (ht *HuffmanTree[T]) DecodeBitSequence(bitSequence *bitstructs.BitSequence)
 	//bitSequence.GetNextBitStart(0)
 	//dataLen := ht.findDataLenFromBitSequence(ht.root, 0, bitSequence)
 
-	var data *[]T
+	var data *[]T = new([]T)
 	bitSequence.GetNextBitStart(0)
 	ht.decodeHuffmanCodeHelper(ht.root, data, bitSequence)
 	return data
