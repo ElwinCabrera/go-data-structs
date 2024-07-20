@@ -130,7 +130,10 @@ func (ht *HuffmanTree[T]) DecodeBitSequence(bitSequence *bitstructs.BitSequence)
 
 	var data *[]T = new([]T)
 	bitSequence.GetNextBitStart(0)
-	ht.decodeHuffmanCodeHelper(ht.root, data, bitSequence)
+	for bitSequence.GetNextBitIdx() < bitSequence.GetNumBits() {
+		ht.decodeHuffmanCodeHelper(ht.root, data, bitSequence)
+	}
+
 	return data
 }
 
@@ -140,7 +143,8 @@ func (ht *HuffmanTree[T]) decodeHuffmanCodeHelper(current *TreeNode[T], data *[]
 	}
 	if !current.IgnoreValue {
 		*data = append(*data, current.Value)
-		current = ht.root
+		//current = ht.root	//While this does work if the bit sequence length gets is large enough then the stack could grow uncontrollably
+		return
 	}
 	if bitSequence.GetNextBitIdx() >= bitSequence.GetNumBits() {
 		return
