@@ -143,7 +143,7 @@ func (ht *HuffmanTree[T]) decodeHuffmanCodeHelper(current *TreeNode[T], data *[]
 	}
 	if !current.IgnoreValue {
 		*data = append(*data, current.Value)
-		//current = ht.root	//While this does work if the bit sequence length gets is large enough then the stack could grow uncontrollably
+		//current = ht.root	// not a bug but a limitation if done this way. While this does work if the bit sequence length gets is large enough then the stack could grow uncontrollably
 		return
 	}
 	if bitSequence.GetNextBitIdx() >= bitSequence.GetNumBits() {
