@@ -14,6 +14,11 @@ type HuffmanTree[T comparable] struct {
 }
 
 func NewHuffmanTreeFromFrequencyMap[T comparable](frequencyMap map[T]int) *HuffmanTree[T] {
+	if frequencyMap == nil || len(frequencyMap) == 0 {
+		rootNode := &TreeNode[T]{IgnoreValue: true, Weight: 0}
+		return &HuffmanTree[T]{root: rootNode, frequencyMap: frequencyMap}
+	}
+
 	ht := &HuffmanTree[T]{frequencyMap: frequencyMap}
 	pq := ht.getSortedListFromFrequencyMap()
 	ht.buildTreeFromSortedList(pq)
@@ -46,21 +51,21 @@ func (ht *HuffmanTree[T]) buildTreeFromSortedList(pq *stack_queue_set.PriorityQu
 	done := false
 	for !done {
 		leftTree := pq.Dequeue().(*TreeNode[T])
-		rightTree := pq.Dequeue().(*TreeNode[T])
+		rightTree := pq.Dequeue()
+		parentTreeNode := &TreeNode[T]{IgnoreValue: true, left: leftTree}
 
-		combinedWeight := 0
-		if leftTree != nil {
-			combinedWeight += leftTree.Weight
-		}
+		combinedWeight := leftTree.Weight
+
 		if rightTree != nil {
-			combinedWeight += rightTree.Weight
+			combinedWeight += rightTree.(*TreeNode[T]).Weight
+			parentTreeNode.right = rightTree.(*TreeNode[T])
 		}
 		if pq.IsEmpty() {
 			done = true
 		}
+		parentTreeNode.Weight = combinedWeight
 
-		treeNode := &TreeNode[T]{IgnoreValue: true, Weight: combinedWeight, left: leftTree, right: rightTree}
-		pq.Push(treeNode, combinedWeight)
+		pq.Push(parentTreeNode, combinedWeight)
 	}
 
 	ht.root = pq.Dequeue().(*TreeNode[T])

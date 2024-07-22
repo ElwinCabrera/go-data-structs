@@ -2,3 +2,4 @@
 .vscode
 .test
 go.work
+go.sum
