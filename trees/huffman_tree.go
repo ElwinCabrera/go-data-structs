@@ -39,9 +39,10 @@ func (ht *HuffmanTree[T]) getSortedListFromFrequencyMap() *stack_queue_set.Prior
 	//ll := list.InitDoublyLinkedList()
 	priorityQ := stack_queue_set.NewPriorityQueue(true)
 	for val, weight := range ht.frequencyMap {
-		treeNode := &TreeNode[T]{Value: val, Weight: weight}
+		weightInFloat := float64(weight)
+		treeNode := &TreeNode[T]{Value: val, Weight: weightInFloat}
 		//ll.InsertSortedDescBasedOnNodeWeight(treeNode, weight)
-		priorityQ.Push(treeNode, weight)
+		priorityQ.Push(treeNode, weightInFloat)
 	}
 	return priorityQ
 }
@@ -105,7 +106,7 @@ func (ht *HuffmanTree[T]) generateHuffmanCodes(current *TreeNode[T], currentCode
 func (ht *HuffmanTree[T]) recreateOriginalTreeFromHuffmanCodes(current *TreeNode[T], data T, bitSequence bitstructs.BitSequence, currBitIdx uint64) {
 	isBitSet := bitSequence.GetBit(int(currBitIdx))
 	if currBitIdx == 0 {
-		leaf := &TreeNode[T]{Value: data, Weight: int(bitSequence.GetXBytes(8))}
+		leaf := &TreeNode[T]{Value: data, Weight: float64(bitSequence.GetXBytes(8))}
 		if !isBitSet && current.left == nil {
 			current.left = leaf
 		}

@@ -10,7 +10,7 @@ func NewDoublyLinkedList() *DoublyLinkedList {
 	return &DoublyLinkedList{nil, 0}
 }
 
-func (dll *DoublyLinkedList) InsertEnd(v any, weight int) *Node {
+func (dll *DoublyLinkedList) InsertEnd(v any, weight float64) *Node {
 	head := dll.head
 	new_node := &Node{Value: v, Weight: weight}
 	if head == nil {
@@ -26,7 +26,7 @@ func (dll *DoublyLinkedList) InsertEnd(v any, weight int) *Node {
 	return new_node
 }
 
-func (dll *DoublyLinkedList) InsertFront(v any, weight int) *Node {
+func (dll *DoublyLinkedList) InsertFront(v any, weight float64) *Node {
 	new_node := &Node{Value: v, Weight: weight}
 	if dll.head == nil {
 		dll.head = new_node
@@ -39,7 +39,7 @@ func (dll *DoublyLinkedList) InsertFront(v any, weight int) *Node {
 	return new_node
 }
 
-func (dll *DoublyLinkedList) InsertBefore(v any, weight int, n *Node) *Node {
+func (dll *DoublyLinkedList) InsertBefore(v any, weight float64, n *Node) *Node {
 
 	new_node := &Node{Value: v, Weight: weight}
 	if dll.head == nil || n == nil {
@@ -62,7 +62,7 @@ func (dll *DoublyLinkedList) InsertBefore(v any, weight int, n *Node) *Node {
 	return new_node
 }
 
-func (dll *DoublyLinkedList) InsertAfter(v any, weight int, n *Node) *Node {
+func (dll *DoublyLinkedList) InsertAfter(v any, weight float64, n *Node) *Node {
 
 	new_node := &Node{Value: v, Weight: weight}
 
@@ -85,7 +85,7 @@ func (dll *DoublyLinkedList) InsertAfter(v any, weight int, n *Node) *Node {
 	return new_node
 }
 
-func (dll *DoublyLinkedList) InsertSortedDescBasedOnNodeWeight(value any, weight int) *Node {
+func (dll *DoublyLinkedList) InsertSortedDescBasedOnNodeWeight(value any, weight float64) *Node {
 
 	curr := dll.head
 	nodeInserted := false
@@ -116,7 +116,7 @@ func (dll *DoublyLinkedList) InsertSortedDescBasedOnNodeWeight(value any, weight
 	return res
 }
 
-func (dll *DoublyLinkedList) InsertSortedAscBasedOnNodeWeight(value any, weight int) *Node {
+func (dll *DoublyLinkedList) InsertSortedAscBasedOnNodeWeight(value any, weight float64) *Node {
 
 	curr := dll.head
 	nodeInserted := false
@@ -292,4 +292,14 @@ func (dll *DoublyLinkedList) String() string {
 	//result_str += "]"
 	result_str = fmt.Sprintf("%v", arr)
 	return result_str
+}
+
+func (dll *DoublyLinkedList) ValuesAsSlice() []any {
+	var arr []any
+	head := dll.head
+	for head != nil {
+		arr = append(arr, head.Value)
+		head = head.next
+	}
+	return arr
 }

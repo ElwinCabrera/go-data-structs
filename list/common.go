@@ -6,7 +6,7 @@ type ComparableTypes interface {
 
 type Node struct {
 	Value  any
-	Weight int
+	Weight float64
 	next   *Node
 	prev   *Node
 }
@@ -17,12 +17,12 @@ type LinkedList struct {
 }
 
 type List interface {
-	InsertEnd(v any, weight int) *Node
-	InsertFront(v any, weight int) *Node
-	InsertBefore(v any, weight int, n *Node) *Node
-	InsertAfter(v any, weight int, n *Node) *Node
-	InsertSortedAscBasedOnNodeWeight(value any, weight int) *Node
-	InsertSortedDescBasedOnNodeWeight(value any, weight int) *Node
+	InsertEnd(v any, weight float64) *Node
+	InsertFront(v any, weight float64) *Node
+	InsertBefore(v any, weight float64, n *Node) *Node
+	InsertAfter(v any, weight float64, n *Node) *Node
+	InsertSortedAscBasedOnNodeWeight(value any, weight float64) *Node
+	InsertSortedDescBasedOnNodeWeight(value any, weight float64) *Node
 	Remove(n *Node) bool
 	PopFront() *Node
 	PopBack() *Node
@@ -30,4 +30,5 @@ type List interface {
 	Len() int
 	Head() *Node
 	Clear()
+	ValuesAsSlice() []any
 }

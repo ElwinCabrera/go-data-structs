@@ -46,12 +46,12 @@ func test_InsertSorted(t *testing.T, l list.List, size int) {
 	insert_values := getArrayOfRandomNonNegativeUniqueValues(size)
 	insert_weights := getArrayOfRandomNonNegativeUniqueValues(size)
 	for i := 0; i < size; i++ {
-		l.InsertSortedAscBasedOnNodeWeight(insert_values[i], insert_weights[i])
+		l.InsertSortedAscBasedOnNodeWeight(insert_values[i], float64(insert_weights[i]))
 	}
 	it := list.NewListIterator(l)
 	idx := 0
 	for it = it.Begin(); it.Get() != nil; it = it.Next() {
-		if it.Get().Weight != idx {
+		if it.Get().Weight != float64(idx) {
 			t.Fatalf("Test_InsertSorted(..) test failed to verify list contents\n")
 		}
 		idx++
@@ -62,12 +62,12 @@ func test_InsertSorted(t *testing.T, l list.List, size int) {
 	insert_values = getArrayOfRandomNonNegativeUniqueValues(size)
 	insert_weights = getArrayOfRandomNonNegativeUniqueValues(size)
 	for i := 0; i < size; i++ {
-		l.InsertSortedDescBasedOnNodeWeight(insert_values[i], insert_weights[i])
+		l.InsertSortedDescBasedOnNodeWeight(insert_values[i], float64(insert_weights[i]))
 	}
 	it = list.NewListIterator(l)
 	idx = size - 1
 	for it = it.Begin(); it.Get() != nil; it = it.Next() {
-		if it.Get().Weight != idx {
+		if it.Get().Weight != float64(idx) {
 			t.Fatalf("Test_InsertSorted(..) test failed to verify list contents\n")
 		}
 		idx--

@@ -14,12 +14,12 @@ func NewPriorityQueue(orderAsc bool) *PriorityQueue {
 	return &PriorityQueue{list.NewDoublyLinkedList(), orderAsc}
 }
 
-func (queue *PriorityQueue) Push(value any, priority int) {
+func (queue *PriorityQueue) Push(value any, weight float64) {
 
 	if queue.orderAsc {
-		queue.list.InsertSortedAscBasedOnNodeWeight(value, priority)
+		queue.list.InsertSortedAscBasedOnNodeWeight(value, weight)
 	} else {
-		queue.list.InsertSortedDescBasedOnNodeWeight(value, priority)
+		queue.list.InsertSortedDescBasedOnNodeWeight(value, weight)
 	}
 }
 
