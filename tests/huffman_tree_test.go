@@ -8,7 +8,7 @@ import (
 
 func TestCreateHuffmanTreeFromFrequencyMap(t *testing.T) {
 	s3 := "A_DEAD_DAD_CEDED_A_BAD_BABE"
-	freqMap := make(map[rune]int)
+	freqMap := make(map[rune]uint64)
 	for _, c := range s3 {
 		freqMap[c] += 1
 	}
@@ -56,7 +56,7 @@ func TestCreateHuffmanTreeFromFrequencyMap(t *testing.T) {
 
 func TestCreateHuffmanTreeFromHuffmanCodes(t *testing.T) {
 	s3 := "A_DEAD_DAD_CEDED_A_BAD_BABE"
-	freqMap := make(map[rune]int)
+	freqMap := make(map[rune]uint64)
 	for _, c := range s3 {
 		freqMap[c] += 1
 	}

@@ -5,7 +5,8 @@ import (
 	"unicode"
 )
 
-func NumToHexString(num uint) string {
+// little endian
+func NumToHexString(num uint64) string {
 	if num == 0 {
 		return "0"
 	}
@@ -24,16 +25,17 @@ func NumToHexString(num uint) string {
 	return hex
 }
 
-func HexStringToInt(hexStr string) int {
-	num := 0
+// reads the hex str as little endian
+func HexStringToInt(hexStr string) uint64 {
+	num := uint64(0)
 	idx := len(hexStr) - 1
 	for idx >= 0 {
 		c := hexStr[idx]
 		exponent := float64(len(hexStr) - idx - 1)
 		if unicode.IsDigit(rune(c)) {
-			num += int(c-'0') * int(math.Pow(16, exponent))
+			num += uint64(c-'0') * uint64(math.Pow(16, exponent))
 		} else {
-			num += int((c-'A')+10) * int(math.Pow(16, exponent))
+			num += uint64((c-'A')+10) * uint64(math.Pow(16, exponent))
 		}
 		idx--
 	}

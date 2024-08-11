@@ -81,7 +81,7 @@ func TestNumToHexString(t *testing.T) {
 
 	for i := 0; i <= end; i++ {
 		expectedHex := fmt.Sprintf("%X", i)
-		hexStr := utils.NumToHexString(uint(i))
+		hexStr := utils.NumToHexString(uint64(i))
 		//fmt.Println(hexStr)
 		if expectedHex != hexStr {
 			t.Fatalf("NumToHexString(uint): expected %s, actual %s", expectedHex, hexStr)
@@ -92,8 +92,8 @@ func TestNumToHexString(t *testing.T) {
 
 func TestHexToNum(t *testing.T) {
 
-	end := int(^uint16(0))
-	for expectedNum := 0; expectedNum <= end; expectedNum++ {
+	end := uint64(^uint16(0))
+	for expectedNum := uint64(0); expectedNum <= end; expectedNum++ {
 		hexStr := fmt.Sprintf("%X", expectedNum)
 		num := utils.HexStringToInt(hexStr)
 

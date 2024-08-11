@@ -8,12 +8,12 @@ import (
 
 type HuffmanTree[T comparable] struct {
 	root         *TreeNode[T]
-	frequencyMap map[T]int
+	frequencyMap map[T]uint64
 
 	huffmanCodes map[T]bitstructs.BitSequence
 }
 
-func NewHuffmanTreeFromFrequencyMap[T comparable](frequencyMap map[T]int) *HuffmanTree[T] {
+func NewHuffmanTreeFromFrequencyMap[T comparable](frequencyMap map[T]uint64) *HuffmanTree[T] {
 	if frequencyMap == nil || len(frequencyMap) == 0 {
 		rootNode := &TreeNode[T]{IgnoreValue: true, Weight: 0}
 		return &HuffmanTree[T]{root: rootNode, frequencyMap: frequencyMap}
@@ -39,7 +39,7 @@ func (ht *HuffmanTree[T]) getSortedListFromFrequencyMap() *stack_queue_set.Prior
 	//ll := list.InitDoublyLinkedList()
 	priorityQ := stack_queue_set.NewPriorityQueue(true)
 	for val, weight := range ht.frequencyMap {
-		weightInFloat := float64(weight)
+		weightInFloat := float64(weight) // can cause issues putting as the mantissa is less than 64 bits
 		treeNode := &TreeNode[T]{Value: val, Weight: weightInFloat}
 		//ll.InsertSortedDescBasedOnNodeWeight(treeNode, weight)
 		priorityQ.Push(treeNode, weightInFloat)

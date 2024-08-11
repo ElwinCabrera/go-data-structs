@@ -8,6 +8,7 @@ type ListIterator struct {
 
 func NewListIterator(l List) *ListIterator {
 	endItr := &ListIterator{nil, nil, nil}
+	endItr.end = endItr
 	return &ListIterator{l, l.Head(), endItr}
 }
 
